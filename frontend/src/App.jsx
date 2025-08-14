@@ -6,13 +6,13 @@ const App = () => {
   return (
     <Routes>
       {/*Dashboard User Layout*/}
-      <Route path='/dashboard' element={UserDashboardLayout}>
+      <Route path='/dashboard' element={<UserDashboardLayout />}>
 
       </Route>
       {/**/}
 
       {/*HomeLayout*/}
-      <Route path='/' element={HomeLayout}>
+      <Route path='/' element={<HomeLayout />}>
 
       </Route>
       {/**/}
