@@ -9,9 +9,17 @@ export default {
     extend: {
       colors: {
         dashboard: 'rgba(62, 24, 113)',
-        slider: 'rgba(20, 5, 43, 0.5)',
+        slider: 'rgba(20, 5, 43)',
+      },
+      fontFamily: {
+        josefinSans: ['"Josefin Sans"', 'sans-serif'],
+        josefinSlab: ['"Josefin Slab"', 'serif'],
+        hachiMaruPop: ['"Hachi Maru Pop"', 'cursive'],
+        mochiyPopPOne: ['"Mochiy Pop P One"', 'sans-serif'],
+        poppins: ['"Poppins"', 'sans-serif'],
+        kanchenjunga: ['"Kanchenjunga"', 'sans-serif'],
       },
     },
   },
   plugins: [],
-}
+};
