@@ -4,7 +4,7 @@ import facebooklogo from '../assets/facebook.svg';
 import twitterlogo from '../assets/twiiter.svg'; 
 const Footer = () => {
     return (
-        <div className='absolute bottom-0 left-0 right-0 w-full  bg-black/80 flex items-end justify-center'>
+        <div className='bottom-0 left-0 right-0 w-full bg-black/80 flex items-end justify-center'>
             <div className='p-3 flex flex-col items-center justify-center w-full gap-10'>
                 <img src={logo} alt='logo' className='object-contain size-52' />
                 <div className='flex items-center justify-center gap-4'>
