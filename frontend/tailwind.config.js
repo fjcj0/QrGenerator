@@ -19,6 +19,9 @@ export default {
         poppins: ['"Poppins"', 'sans-serif'],
         kanchenjunga: ['"Kanchenjunga"', 'sans-serif'],
       },
+      fontSize: {
+        extraSmall: "10px;", 
+      }
     },
   },
   plugins: [],
