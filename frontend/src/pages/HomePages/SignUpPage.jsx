@@ -2,6 +2,7 @@ import React from 'react';
 import Lottie from 'lottie-react';
 import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
 import QrAnimation from '../../animations/QRCodeAnimation.json';
+import { Link } from 'react-router-dom';
 const SignUpPage = () => {
     return (
         <div className='my-28'>
@@ -99,6 +100,9 @@ const SignUpPage = () => {
                                 <button type='submit' className='border-blue-700 border-[0.2px] px-4 py-2 rounded-lg text-white font-bold font-josefinSans text-xl hover:bg-blue-700'>
                                     Sign Up
                                 </button>
+                            </div>
+                            <div className=''>
+                                <p className='text-white font-josefinSans text-sm'>do you have an account? <Link to={'/login'} className='text-blue-700'>sign in</Link></p>
                             </div>
                         </form>
                     </div>
