@@ -31,7 +31,7 @@ const Footer = () => {
                         />
                     </a>
                 </div>
-                <p className='text-extraSmall font-josefinSans text-gray-400'>QR Code is a registered trademark of DENSO WAVE INCORPORATED in the United States and other countries</p>
+                <p className='text-extraSmall font-josefinSans text-gray-400'>@QR Code is a registered trademark of DENSO WAVE INCORPORATED in the United States and other countries</p>
             </div>
         </div>
     );

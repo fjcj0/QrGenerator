@@ -9,7 +9,7 @@ const Header = () => {
         <div className='bg-violet-900/30'>
             <div className='w-full flex items-center justify-between px-5 py-3'>
                 <Link to={'/'}>
-                    <img src={logo} className='object-contain h-16 p-1' alt="Logo" />
+                    <img src={logo} className='object-contain h-28 p-1' alt="Logo" />
                 </Link>
                 <div className='flex items-center gap-3 font-josefinSans'>
                     <Link
@@ -26,7 +26,7 @@ const Header = () => {
                     </Link>
                     <button
                         type='button'
-                        className='bg-red-400 flex items-center justify-center gap-2 px-4 py-2 rounded-xl hover:bg-red-200'>
+                        className='bg-red-400 hidden  items-center justify-center gap-2 px-4 py-2 rounded-xl hover:bg-red-200'>
                         <MdLogout /> logout
                     </button>
                 </div>

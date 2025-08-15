@@ -4,6 +4,7 @@ import AboutCard from '../../components/AboutCard';
 import { Link } from 'react-router-dom';
 import AdvantagesQr from '../../components/AdvantagesQr';
 import ExamplesQr from '../../components/ExamplesQr';
+import AskedQuestions from '../../components/AskedQuestions';
 const HomePage = () => {
     const features = [
         {
@@ -54,7 +55,8 @@ const HomePage = () => {
                 </div>
             </div>
             <AdvantagesQr />
-            <ExamplesQr/>
+            <ExamplesQr />
+            <AskedQuestions/>
         </div>
     );
 }

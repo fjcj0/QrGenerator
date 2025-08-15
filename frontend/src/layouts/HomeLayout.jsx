@@ -6,7 +6,7 @@ import bgImage from '../assets/background-dahsbaord.jpg';
 const HomeLayout = () => {
     return (
         <div
-            className='w-screen min-h-[100vh] bg-center bg-no-repeat bg-cover'
+            className='w-screen min-h-[100vh] bg-center bg-no-repeat bg-fixed bg-cover'
             style={{ backgroundImage: `url(${bgImage})` }}
         >
             <Header />
