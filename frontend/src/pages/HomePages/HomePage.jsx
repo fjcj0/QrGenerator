@@ -3,6 +3,7 @@ import { MdQrCode, MdEdit, MdBarChart, MdFolder, MdPalette } from 'react-icons/m
 import AboutCard from '../../components/AboutCard';
 import { Link } from 'react-router-dom';
 import AdvantagesQr from '../../components/AdvantagesQr';
+import ExamplesQr from '../../components/ExamplesQr';
 const HomePage = () => {
     const features = [
         {
@@ -53,6 +54,7 @@ const HomePage = () => {
                 </div>
             </div>
             <AdvantagesQr />
+            <ExamplesQr/>
         </div>
     );
 }
