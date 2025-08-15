@@ -12,7 +12,7 @@ const UserDashboardLayout = () => {
         <div className={`user w-screen h-screen ${isDarkMode ? 'bg-gray-900 ' : 'bg-white'}`}>
             <div className='flex flex-row'>
                 <Slider />
-                <div className={`absolute right-0  ${isSlideOpen ? 'w-[calc(100%-15rem)]' : 'w-[calc(100%-5rem)]'} h-screen ${isDarkMode ? 'bg-dashboard' : 'bg-slate-950'}`}>
+                <div className={`absolute right-0  ${isSlideOpen ? 'w-[calc(100%-15rem)]' : 'w-[calc(100%-5rem)]'} min-h-[100vh] ${isDarkMode ? 'bg-dashboard' : 'bg-slate-950'}`}>
                     <div className='z-50 flex flex-col items-center fixed right-0 mr-3 top-[40%]'>
                         <button
                             type='button'

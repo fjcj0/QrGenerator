@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useColorStore from '../store/colorStore.js';
 import useSlideStore from '../store/slideStore.js';
 import logo from '../assets/logo.png';
 import { NavLink } from 'react-router-dom';
 import { MdDashboard, MdQrCode, MdLogin, MdPersonAdd, MdLogout,MdCreate } from 'react-icons/md';
 import DashboardInfoCollapse from './DashboardInfoCollapse.jsx';
+import profileimage from '../assets/bg-profile.png';
+import { FaCamera, FaChevronDown } from 'react-icons/fa';
 const Slider = () => {
     const { isDarkMode } = useColorStore();
     const { isSlideOpen } = useSlideStore();
+    const [isDetailsOpen, setIsDetailsOpen] = useState(false);
     const linkBaseClasses = "flex items-center transition-colors rounded-xl";
     const expandedClasses = "gap-2 px-2 py-3 text-sm font-medium";
     const collapsedClasses = "p-3 justify-center";
@@ -93,6 +96,54 @@ const Slider = () => {
                     {isSlideOpen && <span>Logout</span>}
                 </NavLink>
             </div>
+            <hr className={`${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'} w-full h-[0.3px]`} />
+            <div className={`${isSlideOpen ? 'flex flex-col items-start justify-start' : 'hidden'} my-5`}>
+                <div
+                    className={`px-3 mx-auto w-[95%] ${isDarkMode
+                            ? 'bg-blue-700 border-2 border-dotted border-white'
+                            : 'bg-violet-700 border-2 border-dotted border-black'
+                        } py-5 rounded-3xl`}
+                >
+                    <div className='flex justify-between items-center w-full'>
+                        <div
+                            className={`relative w-[5rem] h-[5rem] ${isDarkMode ? 'bg-violet-700' : 'bg-blue-700'
+                                } rounded-full flex items-center justify-center overflow-hidden`}
+                        >
+                            <img
+                                src={profileimage}
+                                alt='avatar'
+                                className='w-full h-full object-cover'
+                            />
+                            <button
+                                type='button'
+                                className='absolute bottom-0 w-full bg-black/50 flex justify-center py-1'
+                            >
+                                <FaCamera className='text-white text-sm' />
+                            </button>
+                        </div>
+                        <button
+                            type='button'
+                            onClick={() => setIsDetailsOpen(!isDetailsOpen)}
+                            className='transition-transform'
+                        >
+                            <FaChevronDown
+                                className={`text-sm transition-transform duration-300 ${isDetailsOpen ? 'rotate-180' : ''
+                                    } ${isDarkMode ? 'text-white' : 'text-black'}`}
+                            />
+                        </button>
+                    </div>
+
+                    <div
+                        className={`${isDarkMode ? 'text-white' : 'text-black'} text-sm font-josefinSans grid  grid-cols-1 overflow-hidden transition-all duration-500 ease-in-out ${isDetailsOpen ? 'max-h-40 mt-5' : 'max-h-0'
+                            }`}
+                    >
+                            <p>First Name: Omar</p>
+                            <p>Last Name: Qais</p>
+                            <p>Username: omarqais122</p>
+                            <p>Email: omarqais24@gmail.com</p>
+                    </div>
+                </div>
+            </div>
             <hr className={`${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'} w-full h-[0.3px] ${isSlideOpen ? '' : 'hidden'}`} />
             {isSlideOpen && (
                 <div className="px-3 flex flex-col items-start justify-start my-5 w-full">
@@ -107,5 +158,4 @@ const Slider = () => {
         </div>
     );
 };
-
 export default Slider;
