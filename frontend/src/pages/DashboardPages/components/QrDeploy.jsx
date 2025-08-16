@@ -4,6 +4,7 @@ import qrimage from '../../../assets/qr.svg';
 import Content from './Content.jsx';
 import Colors from './Colors.jsx';
 import Logo from './Logo.jsx';
+import Design from './Design.jsx';
 const QrDeploy = () => {
     const { isDarkMode } = useColorStore();
     {/*content states*/}
@@ -21,7 +22,9 @@ const QrDeploy = () => {
     const [logo, setLogo] = useState(null);
     {/* */ }
     {/*design  states*/ }
-
+    const [bodyShape, setBodyShape] = useState('');
+    const [eyeFrameShape, setEyeFrameShape] = useState('');
+    const [eyeBallShape, setEyeBallShape] = useState('');
     {/* */}
     return (
         <div
@@ -44,7 +47,8 @@ const QrDeploy = () => {
                     setTypeColor={setTypeColor}
                     typeColor={typeColor}
                 />
-                <Logo setLogo={setLogo} logo={logo}/>
+                <Logo setLogo={setLogo} logo={logo} />
+             <Design setBodyShape={setBodyShape} bodyShape={bodyShape} setEyeFrameShape={setEyeFrameShape} eyeFrameShape={eyeFrameShape} setEyeBallShape={setEyeBallShape} eyeBallShape={eyeBallShape}/>
             </div>
             <div className="lg:col-span-4">
                 <div className='h-full w-full p-3 flex flex-col items-center justify-center gap-4'>

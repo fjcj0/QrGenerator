@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import useColorStore from '../../../store/colorStore.js';
 import { FaPlus, FaMinus, FaImage } from 'react-icons/fa';
-import logos from '../../../data.js';
+import { logos } from '../../../data.js';
 const Logo = ({ setLogo, logo }) => {
   const { isDarkMode } = useColorStore();
   const [isOpen, setIsOpen] = useState(false);
