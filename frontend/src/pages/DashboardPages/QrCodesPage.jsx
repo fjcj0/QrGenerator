@@ -53,7 +53,6 @@ const QrCodesPage = () => {
                     />
                 </div>
             </div>
-          
         </div>
     );
 }

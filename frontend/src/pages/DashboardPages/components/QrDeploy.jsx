@@ -1,17 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useColorStore from '../../../store/colorStore.js';
 import qrimage from '../../../assets/qr.svg';
 import Content from './Content.jsx';
+import Colors from './Colors.jsx';
 const QrDeploy = () => {
     const { isDarkMode } = useColorStore();
+    const [url, setUrl] = useState(''); 
+    const [background, setBackground] = useState('#000000'); 
+    const [singleColor, setSingleColor] = useState(true);  
+    const [colorGradient, setColorGradient] = useState(false);
+    const [typeColor, setTypeColor] = useState('linear');
+    const [eyeColor1, setEyeColor1] = useState('#000000'); 
+    const [eyeColor2, setEyeColor2] = useState('#000000'); 
     return (
         <div
             className={`lg:w-[90%] w-[100%] rounded-xl h-[85vh] overflow-y-auto ${isDarkMode ? 'bg-black' : 'bg-white'
                 } grid lg:grid-cols-12 grid-cols-1 gap-4`}
         >
-            <div className="flex flex-col items-center justify-center lg:col-span-8">
-                <Content setUrl={'asf'} url={'14124'} />
-                
+            <div className="flex flex-col items-center justify-center lg:col-span-8 py-5">
+                <Content setUrl={setUrl} url={url}/>
+                <Colors
+                    setBackground={setBackground}
+                    background={background}
+                    setEyeColor1={setEyeColor1}
+                    eyeColor1={eyeColor1}
+                    setEyeColor2={setEyeColor2}
+                    eyeColor2={eyeColor2}
+                    setSingleColor={setSingleColor}
+                    singleColor={singleColor}
+                    setColorGradient={setColorGradient}
+                    colorGradient={colorGradient}
+                    setTypeColor={setTypeColor}
+                    typeColor={typeColor}
+                />
             </div>
             <div className="lg:col-span-4">
                 <div className='h-full w-full p-3 flex flex-col items-center justify-center gap-4'>
