@@ -14,7 +14,10 @@ const QrDeploy = () => {
     const [background, setBackground] = useState('#000000'); 
     const [singleColor, setSingleColor] = useState(true);  
     const [colorGradient, setColorGradient] = useState(false);
+    const [colorGradient1, setColorGradient1] = useState('#000000');
+    const [colorGradient2, setColorGradient2] = useState('#000000');
     const [typeColor, setTypeColor] = useState('linear');
+    const [eyeCustom, setEyeCustom] = useState(false);
     const [eyeColor1, setEyeColor1] = useState('#000000'); 
     const [eyeColor2, setEyeColor2] = useState('#000000'); 
     {/* */}
@@ -46,9 +49,23 @@ const QrDeploy = () => {
                     colorGradient={colorGradient}
                     setTypeColor={setTypeColor}
                     typeColor={typeColor}
+                    setColorGradient1={setColorGradient1}
+                    colorGradient1={colorGradient1}
+                    setColorGradient2={setColorGradient2}
+                    colorGradient2={colorGradient2}
+                    setEyeCustom={setEyeCustom}
+                    eyeCustom={eyeCustom}
                 />
-                <Logo setLogo={setLogo} logo={logo} />
-             <Design setBodyShape={setBodyShape} bodyShape={bodyShape} setEyeFrameShape={setEyeFrameShape} eyeFrameShape={eyeFrameShape} setEyeBallShape={setEyeBallShape} eyeBallShape={eyeBallShape}/>
+                <Logo
+                    setLogo={setLogo}
+                    logo={logo} />
+                <Design
+                    setBodyShape={setBodyShape}
+                    bodyShape={bodyShape}
+                    setEyeFrameShape={setEyeFrameShape}
+                    eyeFrameShape={eyeFrameShape}
+                    setEyeBallShape={setEyeBallShape}
+                    eyeBallShape={eyeBallShape} />
             </div>
             <div className="lg:col-span-4">
                 <div className='h-full w-full p-3 flex flex-col items-center justify-center gap-4'>

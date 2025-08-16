@@ -8,10 +8,12 @@ const Colors = ({
     setEyeColor2, eyeColor2,
     setSingleColor, singleColor,
     setColorGradient, colorGradient,
-    setTypeColor, typeColor, 
+    setColorGradient1, colorGradient1,
+    setColorGradient2, colorGradient2,
+    setTypeColor, typeColor,
+    setEyeCustom,eyeCustom
 }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [eyeCustom, setEyeCustom] = useState(false); 
     const { isDarkMode } = useColorStore();
     return (
         <div className="flex flex-col gap-4 w-full px-3">
@@ -92,16 +94,16 @@ const Colors = ({
                         <div className={`flex items-center gap-2 px-3 py-2 rounded-md ${isDarkMode ? 'bg-violet-700 text-white' : 'bg-blue-700 text-black'}`}>
                             <input
                                 type="color"
-                                value={background[0] || "#000000"}
-                                onChange={(e) => setBackground([e.target.value, background[1] || "#000000"])}
+                                value={colorGradient1 || "#000000"}
+                                onChange={(e) => setColorGradient1(e.target.value)}
                             />
-                            <label>{background[0] || "#000000"}</label>
+                            <label>{colorGradient1 || "#000000"}</label>
                             <input
                                 type="color"
-                                value={background[1] || "#000000"}
-                                onChange={(e) => setBackground([background[0] || "#000000", e.target.value])}
+                                value={colorGradient2 || "#000000"}
+                                onChange={(e) => setColorGradient2(e.target.value)}
                             />
-                            <label>{background[1] || "#000000"}</label>
+                            <label>{colorGradient2 || "#000000"}</label>
                             <button type="button" onClick={() => setTypeColor(typeColor === 'linear' ? 'radial' : 'linear')}>
                                 <MdFindReplace className="text-2xl" />
                             </button>
