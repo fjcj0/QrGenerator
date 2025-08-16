@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { FaMinus, FaPlus } from 'react-icons/fa';
 import { MdColorLens, MdFindReplace } from 'react-icons/md';
 import useColorStore from '../../../store/colorStore.js';
-
 const Colors = ({
     setBackground, background,
     setEyeColor1, eyeColor1,

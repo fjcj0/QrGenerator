@@ -3,15 +3,26 @@ import useColorStore from '../../../store/colorStore.js';
 import qrimage from '../../../assets/qr.svg';
 import Content from './Content.jsx';
 import Colors from './Colors.jsx';
+import Logo from './Logo.jsx';
 const QrDeploy = () => {
     const { isDarkMode } = useColorStore();
+    {/*content states*/}
     const [url, setUrl] = useState(''); 
+    {/* */}
+    {/*color states*/}
     const [background, setBackground] = useState('#000000'); 
     const [singleColor, setSingleColor] = useState(true);  
     const [colorGradient, setColorGradient] = useState(false);
     const [typeColor, setTypeColor] = useState('linear');
     const [eyeColor1, setEyeColor1] = useState('#000000'); 
     const [eyeColor2, setEyeColor2] = useState('#000000'); 
+    {/* */}
+    {/*logo states*/ }
+    const [logo, setLogo] = useState(null);
+    {/* */ }
+    {/*design  states*/ }
+
+    {/* */}
     return (
         <div
             className={`lg:w-[90%] w-[100%] rounded-xl h-[85vh] overflow-y-auto ${isDarkMode ? 'bg-black' : 'bg-white'
@@ -33,6 +44,7 @@ const QrDeploy = () => {
                     setTypeColor={setTypeColor}
                     typeColor={typeColor}
                 />
+                <Logo setLogo={setLogo} logo={logo}/>
             </div>
             <div className="lg:col-span-4">
                 <div className='h-full w-full p-3 flex flex-col items-center justify-center gap-4'>
