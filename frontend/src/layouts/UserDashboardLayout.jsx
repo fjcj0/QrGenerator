@@ -17,12 +17,12 @@ const UserDashboardLayout = () => {
                         <button
                             type='button'
                             onClick={() => setIsOpen(!isOpen)}
-                            className='rounded-2xl flex items-center justify-center w-[3rem] h-[3rem] bg-black'
+                            className='rounded-2xl flex items-center justify-center w-[3rem] h-[3rem] bg-blue-500'
                         >
                             <MdSettings size={20} color='white' className="animate-spin-slow" />
                         </button>
                         <div
-                            className={`mt-2 bg-violet-600 p-3 rounded-lg shadow-lg overflow-hidden transition-all duration-300
+                            className={`mt-2 bg-blue-500 p-3 rounded-lg shadow-lg overflow-hidden transition-all duration-300
                             ${isOpen ? 'max-h-60 opacity-100' : 'max-h-0 opacity-0'}`}>
                             <ul className='flex items-start justify-start gap-2'>
                                 <button type='button' onClick={() => { toggleDarkMode(); }}>
