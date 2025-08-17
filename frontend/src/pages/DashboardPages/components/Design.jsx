@@ -91,7 +91,7 @@ const Design = ({ setBodyShape, bodyShape, setEyeFrameShape, eyeFrameShape, setE
                                 <button
                                     key={lv.id}
                                     onClick={() => setLevel(lv.level)}
-                                    className={`flex flex-col w-[5rem] h-[5rem] items-center justify-center rounded-md border-[1.5px] ${getBorderClass(level, lv.level)} bg-white hover:border-yellow-400`}
+                                    className={`flex flex-col w-[5rem] h-[5rem] items-center justify-center rounded-md border-[1.5px] ${getBorderClass(level, lv.level)} ${isDarkMode ? ' bg-black' : 'bg-white'} hover:border-yellow-400`}
                                 >
                                     <p className={`${isDarkMode ? 'text-white' : 'text-black'} text-lg font-josefinSans`}>{lv.level}</p>
                                 </button>

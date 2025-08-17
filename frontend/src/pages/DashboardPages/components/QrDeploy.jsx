@@ -7,6 +7,8 @@ import Logo from './Logo.jsx';
 import Design from './Design.jsx';
 const QrDeploy = () => {
     const { isDarkMode } = useColorStore();
+    //file states
+    const [extension, setExtension] = useState('svg');
     // content states
     const [url, setUrl] = useState('https://example.com');
     const [name, setName] = useState('');
@@ -151,12 +153,38 @@ const QrDeploy = () => {
             </div>
             <div className="lg:col-span-4 flex flex-col items-center justify-center gap-4 p-3">
                 <div ref={qrRef} className="qr-code-preview"></div>
+                <div className="relative w-48">
+                    <select
+                    value={extension}
+                        onChange={(e) => setExtension(e.target.value)}
+                        className={`appearance-none w-full p-4 rounded-lg font-josefinSans 
+                          ${isDarkMode
+                                ? 'bg-violet-700 text-white hover:bg-violet-900'
+                                : 'bg-blue-700 text-black hover:bg-blue-900'
+                            }`}
+                    >
+                        <option value="svg">Svg</option>
+                        <option value="png">Png</option>
+                    </select>
+                    {/* Arrow icon */}
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
+                        <svg
+                            className={`w-5 h-5 ${isDarkMode ? 'text-white' : 'text-black'}`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                </div>
                 <button
                     type='button'
                     className={`${isDarkMode ? 'bg-violet-700 hover:bg-violet-900 text-white' : 'bg-blue-700 hover:bg-blue-900 text-black'} font-josefinSans px-4 py-3 rounded-lg`}
                     onClick={() => {
                         const fileName = name.trim() ? name.trim().replace(/\s+/g, '_') : 'qr-code';
-                        qrCode.current.download({ name: fileName, extension: "svg" });
+                        qrCode.current.download({ name: fileName, extension: extension });
                     }}
                 >
                     Download And Save QR

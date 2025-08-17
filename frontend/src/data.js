@@ -38,7 +38,6 @@ export const bodyShapes = [
     { id: 2, src: kiteShape, alt: 'Kite', name: 'Kite', qrType: 'classy' },
     { id: 3, src: smoothRoundShape, alt: 'Smooth Round', name: 'Smooth Round', qrType: 'extra-rounded' },
     { id: 4, src: smoothSharpShape, alt: 'Smooth Sharp', name: 'Smooth Sharp', qrType: 'square' },
-
 ];
 export const eyeFrames = [
     { id: 1, src: circleFrame, alt: 'Circle', name: 'Circle', qrType: 'dots' },
