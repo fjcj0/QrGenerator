@@ -1,11 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Lottie from 'lottie-react';
 import { FaUser, FaLock } from 'react-icons/fa';
 import QrAnimation from '../../animations/QRCodeAnimation.json';
 import { Link } from 'react-router-dom';
+import { useAuthStore } from '../../store/authStore.js';
+import {toast} from 'react-hot-toast';
 const LoginPage = () => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const isUsernameValid = username.trim().length >= 6;
+    const isPasswordValid = password.trim().length >= 8;
+    const { signin, isLoading, error } = useAuthStore();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if(!isUsernameValid || !isPasswordValid) {
+           toast.error('all fields are required!!');
+           return;
+        }
+        await signin(username, password);
+    };
     return (
-        <div className='my-28'>
+        <div className='flex items-center justify-center min-h-[100vh] w-full'>
             <div className='flex items-center justify-center w-full'>
                 <div className='w-[90%] bg-black/50 grid grid-cols-1 xl:grid-cols-2 p-5 rounded-lg'>
                     <div className='flex items-center justify-center'>
@@ -17,7 +32,7 @@ const LoginPage = () => {
                     </div>
                     <div className='flex flex-col justify-start items-center p-5 w-full'>
                         <h1 className='text-white text-2xl font-bold font-poppins text-center mb-6'>Login</h1>
-                        <form className='w-full space-y-5 font-josefinSans'>
+                        <div className='w-full space-y-5 font-josefinSans'>
                             <div className='relative'>
                                 <FaUser className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400' />
                                 <input
@@ -25,6 +40,7 @@ const LoginPage = () => {
                                     id='username'
                                     className='peer block w-full rounded-md border border-gray-400 bg-transparent px-10 pt-5 pb-2 text-white placeholder-transparent focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                                     placeholder='Username'
+                                    onChange={(e) => setUsername(e.target.value)}
                                 />
                                 <label
                                     htmlFor='username'
@@ -42,6 +58,7 @@ const LoginPage = () => {
                                     id='password'
                                     className='peer block w-full rounded-md border border-gray-400 bg-transparent px-10 pt-5 pb-2 text-white placeholder-transparent focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                                     placeholder='Password'
+                                    onChange={(e) => setPassword(e.target.value)}
                                 />
                                 <label
                                     htmlFor='password'
@@ -54,21 +71,24 @@ const LoginPage = () => {
                             </div>
                             <div className='flex items-center justify-center'>
                                 <button
-                                    type='submit'
+                                    type='button'
+                                    disabled={isLoading}
+                                    onClick={handleSubmit}
                                     className='border-blue-700 border-[0.2px] px-4 py-2 rounded-lg text-white font-bold font-josefinSans text-xl hover:bg-blue-700'
                                 >
-                                    Login
+                                    {isLoading ? '...' : 'Sign In'}
                                 </button>
                             </div>
                             <div>
                                 <p className='text-white font-josefinSans text-sm'>
                                     Don’t have an account?{" "}
-                                    <Link to={'/signup'} className='text-blue-700'>
+                                    <Link to={'/sign-up'} className='text-blue-700'>
                                         Sign up
                                     </Link>
                                 </p>
                             </div>
-                        </form>
+                            {error && <p className='text-red-500 font-semibold my-2'>{error}</p>}
+                        </div>
                     </div>
                 </div>
             </div>

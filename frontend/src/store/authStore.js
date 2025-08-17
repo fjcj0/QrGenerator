@@ -70,12 +70,13 @@ export const useAuthStore = create((set) => ({
             throw new Error(error.response?.data?.message || error.message);
         }
     },
-    editUser: async (userId, newUsername, newName, newProfilePicture) => {
+    editUser: async (userId, newUsername, newFirstName, newLastName,newProfilePicture) => {
         set({ error: null, isLoading: true });
         try {
             const formData = new FormData();
             formData.append('userId', userId);
-            if (newName) formData.append('newName', newName);
+            if (newFirstName) formData.append('newFirstName', newFirstName);
+            if (newLastName) formData.append('newLastName',newLastName);
             if (newUsername) formData.append('newUsername', newUsername);
             if (newProfilePicture) formData.append('profilePicture', newProfilePicture);
             const response = await axios.post(
