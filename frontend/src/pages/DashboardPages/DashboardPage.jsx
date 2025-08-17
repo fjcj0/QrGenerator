@@ -64,7 +64,7 @@ const DashboardPage = () => {
                         </div>
                     </div>
                 </div>
-                <div className={`${isDarkMode ? 'bg-black' : 'bg-white'} rounded-xl xl:h-[570px] lg:h-[350px] h-[300px] overflow-y-auto`}>
+                <div className={`${isDarkMode ? 'bg-black' : 'bg-white'} rounded-xl h-[600px] overflow-y-auto`}>
                     <div className='p-4'>
                         <div className='flex items-center justify-between'>
                             <h1 className={`${isDarkMode ? 'text-white' : 'text-black'} text-xl font-bold font-josefinSans`}>Last Ten Scanners</h1>
