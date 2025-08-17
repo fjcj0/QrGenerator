@@ -12,17 +12,21 @@ const UserDashboardLayout = () => {
         <div className={`user w-screen h-screen ${isDarkMode ? 'bg-gray-900 ' : 'bg-white'}`}>
             <div className='flex flex-row'>
                 <Slider />
-                <div className={`absolute right-0  ${isSlideOpen ? 'w-[calc(100%-15rem)]' : 'w-[calc(100%-5rem)]'} min-h-[100vh] ${isDarkMode ? 'bg-dashboard' : 'bg-slate-950'}`}>
+                <div
+                    className={`absolute right-0 min-h-[100vh]
+    w-full 
+    ${isSlideOpen ? 'md:w-[calc(100%-15rem)]' : 'md:w-[calc(100%-5rem)]'} /* only apply calc on medium+ */
+    ${isDarkMode ? 'bg-dashboard' : 'bg-slate-950'}`}>
                     <div className='z-50 flex flex-col items-center fixed right-0 mr-3 top-[40%]'>
                         <button
                             type='button'
                             onClick={() => setIsOpen(!isOpen)}
-                            className='rounded-2xl flex items-center justify-center w-[3rem] h-[3rem] bg-orange-600'
+                            className='rounded-2xl flex items-center justify-center w-[3rem] h-[3rem] bg-orange-500'
                         >
                             <MdSettings size={20} color='white' className="animate-spin-slow" />
                         </button>
                         <div
-                            className={`mt-2 bg-orange-600 p-3 rounded-lg shadow-lg overflow-hidden transition-all duration-300
+                            className={`mt-2 bg-orange-500 p-3 rounded-lg shadow-lg overflow-hidden transition-all duration-300
                             ${isOpen ? 'max-h-60 opacity-100' : 'max-h-0 opacity-0'}`}>
                             <ul className='flex items-start justify-start gap-2'>
                                 <button type='button' onClick={() => { toggleDarkMode(); }}>

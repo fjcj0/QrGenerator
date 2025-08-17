@@ -3,7 +3,7 @@ import useColorStore from '../store/colorStore.js';
 import useSlideStore from '../store/slideStore.js';
 import logo from '../assets/logo.png';
 import { NavLink } from 'react-router-dom';
-import { MdDashboard, MdQrCode, MdLogin, MdPersonAdd, MdLogout,MdCreate } from 'react-icons/md';
+import { MdDashboard, MdQrCode, MdLogin, MdPersonAdd, MdLogout, MdCreate } from 'react-icons/md';
 import DashboardInfoCollapse from './DashboardInfoCollapse.jsx';
 import profileimage from '../assets/bg-profile.png';
 import { FaCamera, FaChevronDown } from 'react-icons/fa';
@@ -22,7 +22,13 @@ const Slider = () => {
         ? "text-gray-300 hover:bg-violet-500/20 hover:text-violet-400"
         : "text-gray-700 hover:bg-violet-500/20 hover:text-violet-600";
     return (
-        <div className={`sidebar fixed font-poppins overflow-y-auto h-[100vh] ${isSlideOpen ? 'w-[15rem]' : 'w-[5rem]'} flex flex-col ${isDarkMode ? 'bg-gray-900 text-gray-200' : 'bg-white text-gray-800'}`}>
+        <div
+            className={`sidebar fixed font-poppins overflow-y-auto z-50 h-[100vh]
+    ${isSlideOpen ? 'w-[15rem]' : 'w-0'}       
+    ${isSlideOpen ? 'md:w-[15rem]' : 'md:w-[5rem]'} 
+    flex flex-col
+    ${isDarkMode ? 'bg-gray-900 text-gray-200' : 'bg-white text-gray-800'}`}
+        >
             <div className="flex items-start justify-start w-full p-3">
                 <img
                     src={logo}
@@ -101,8 +107,8 @@ const Slider = () => {
             <div className={`${isSlideOpen ? 'flex flex-col items-start justify-start' : 'hidden'} my-5`}>
                 <div
                     className={`px-3 mx-auto w-[95%] ${isDarkMode
-                            ? 'bg-blue-700 border-2 border-dotted border-white'
-                            : 'bg-violet-700 border-2 border-dotted border-black'
+                        ? 'bg-blue-700 border-2 border-dotted border-white'
+                        : 'bg-violet-700 border-2 border-dotted border-black'
                         } py-5 rounded-3xl`}
                 >
                     <div className='flex justify-between items-center w-full'>
@@ -138,10 +144,10 @@ const Slider = () => {
                         className={`${isDarkMode ? 'text-white' : 'text-black'} text-sm font-josefinSans grid  grid-cols-1 overflow-hidden transition-all duration-500 ease-in-out ${isDetailsOpen ? 'max-h-40 mt-5' : 'max-h-0'
                             }`}
                     >
-                            <p>First Name: Omar</p>
-                            <p>Last Name: Qais</p>
-                            <p>Username: omarqais122</p>
-                            <p>Email: omarqais24@gmail.com</p>
+                        <p>First Name: Omar</p>
+                        <p>Last Name: Qais</p>
+                        <p>Username: omarqais122</p>
+                        <p>Email: omarqais24@gmail.com</p>
                     </div>
                 </div>
             </div>
@@ -153,19 +159,16 @@ const Slider = () => {
             <hr className={`${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'} w-full h-[0.3px] ${isSlideOpen ? '' : 'hidden'}`} />
             {isSlideOpen && (
                 <div className='px-3 flex flex-col items-start justify-start my-8 w-full'>
-               <div className="flex flex-col items-center justify-center px-3 py-6 rounded-2xl shadow-lg bg-gradient-to-br from-indigo-400 to-indigo-600 text-white text-center">
-               {/* Logo circle */}
-               <div className="w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-br from-indigo-300 to-indigo-500 -mt-10 shadow-md">
-                 <img src={logowhite} alt="logo" className="w-8 h-8" />
-               </div>
-               {/* Title */}
-               <h2 className="mt-6 text-lg font-bold">Upgrade to PRO</h2>
-               {/* Description */}
-               <p className="mt-2 text-sm opacity-90">
-                 to get access to all features! Connect with Venus World!
-               </p>
-             </div>
-             </div>
+                    <div className="flex flex-col items-center justify-center px-3 py-6 rounded-2xl shadow-lg bg-gradient-to-br from-indigo-400 to-indigo-600 text-white text-center">
+                        <div className="w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-br from-indigo-300 to-indigo-500 -mt-10 shadow-md">
+                            <img src={logowhite} alt="logo" className="w-8 h-8" />
+                        </div>
+                        <h2 className="mt-6 text-lg font-bold">Upgrade to PRO</h2>
+                        <p className="mt-2 text-sm opacity-90">
+                            to get access to all features! Connect with Venus World!
+                        </p>
+                    </div>
+                </div>
             )}
             <div className="my-auto w-full px-3 pb-2 flex items-end justify-center h-[100%]">
                 <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'} text-center text-sm`}>
