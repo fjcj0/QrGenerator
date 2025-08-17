@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import useColorStore from '../../../store/colorStore.js';
 import { FaPlus, FaMinus, FaShapes } from 'react-icons/fa';
-import { bodyShapes, eyeFrames, eyeBalls } from '../../../data.js';
-const Design = ({ setBodyShape, bodyShape, setEyeFrameShape, eyeFrameShape, setEyeBallShape, eyeBallShape }) => {
+import { bodyShapes, eyeFrames, eyeBalls, levels } from '../../../data.js';
+const Design = ({ setBodyShape, bodyShape, setEyeFrameShape, eyeFrameShape, setEyeBallShape, eyeBallShape, setLevel, level }) => {
     const [isOpen, setIsOpen] = useState(false);
     const { isDarkMode } = useColorStore();
     const getBorderClass = (selected, current) => selected === current ? 'border-yellow-400' : 'border-white';
@@ -43,10 +43,11 @@ const Design = ({ setBodyShape, bodyShape, setEyeFrameShape, eyeFrameShape, setE
                             {bodyShapes.map(shape => (
                                 <button
                                     key={shape.id}
-                                    onClick={() => setBodyShape(shape.name)}
-                                    className={`flex flex-col w-[5rem] h-[5rem] items-center justify-center rounded-md border-[1.5px] ${getBorderClass(bodyShape, shape.name)} bg-white hover:border-yellow-400`}
+                                    onClick={() => setBodyShape(shape.qrType)}
+                                    className={`flex flex-col w-[5rem] h-[5rem] items-center justify-center rounded-md border-[1.5px] ${getBorderClass(bodyShape, shape.qrType)} bg-white hover:border-yellow-400`}
                                 >
                                     <img src={shape.src} alt={shape.alt} className='w-full rounded-md' />
+
                                 </button>
                             ))}
                         </div>
@@ -58,10 +59,11 @@ const Design = ({ setBodyShape, bodyShape, setEyeFrameShape, eyeFrameShape, setE
                             {eyeFrames.map(frame => (
                                 <button
                                     key={frame.id}
-                                    onClick={() => setEyeFrameShape(frame.name)}
-                                    className={`flex flex-col w-[5rem] h-[5rem] items-center justify-center rounded-md border-[1.5px] ${getBorderClass(eyeFrameShape, frame.name)} bg-white hover:border-yellow-400`}
+                                    onClick={() => setEyeFrameShape(frame.qrType)}
+                                    className={`flex flex-col w-[5rem] h-[5rem] items-center justify-center rounded-md border-[1.5px] ${getBorderClass(eyeFrameShape, frame.qrType)} bg-white hover:border-yellow-400`}
                                 >
                                     <img src={frame.src} alt={frame.alt} className='w-full rounded-md' />
+
                                 </button>
                             ))}
                         </div>
@@ -73,10 +75,25 @@ const Design = ({ setBodyShape, bodyShape, setEyeFrameShape, eyeFrameShape, setE
                             {eyeBalls.map(ball => (
                                 <button
                                     key={ball.id}
-                                    onClick={() => setEyeBallShape(ball.name)}
-                                    className={`flex flex-col w-[5rem] h-[5rem] items-center justify-center rounded-md border-[1.5px] ${getBorderClass(eyeBallShape, ball.name)} bg-white hover:border-yellow-400`}
+                                    onClick={() => setEyeBallShape(ball.qrType)}
+                                    className={`flex flex-col w-[5rem] h-[5rem] items-center justify-center rounded-md border-[1.5px] ${getBorderClass(eyeBallShape, ball.qrType)} bg-white hover:border-yellow-400`}
                                 >
                                     <img src={ball.src} alt={ball.alt} className='w-full rounded-md' />
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    {/*Level*/}
+                    <div className='flex flex-col gap-4 items-start justify-start'>
+                        <h1 className={`${isDarkMode ? 'text-white' : 'text-black'}`}>Error Correction Level</h1>
+                        <div className='grid md:grid-cols-4 grid-cols-2 gap-3'>
+                            {levels.map(lv => (
+                                <button
+                                    key={lv.id}
+                                    onClick={() => setLevel(lv.level)}
+                                    className={`flex flex-col w-[5rem] h-[5rem] items-center justify-center rounded-md border-[1.5px] ${getBorderClass(level, lv.level)} bg-white hover:border-yellow-400`}
+                                >
+                                    <p className={`${isDarkMode ? 'text-white' : 'text-black'} text-lg font-josefinSans`}>{lv.level}</p>
                                 </button>
                             ))}
                         </div>

@@ -4,14 +4,15 @@ import { MdColorLens, MdFindReplace } from 'react-icons/md';
 import useColorStore from '../../../store/colorStore.js';
 const Colors = ({
     setBackground, background,
-    setEyeColor1, eyeColor1,
-    setEyeColor2, eyeColor2,
+    setEyeFrameColor, eyeFrameColor,
+    setEyeBallColor, eyeBallColor,
     setSingleColor, singleColor,
     setColorGradient, colorGradient,
     setColorGradient1, colorGradient1,
     setColorGradient2, colorGradient2,
     setTypeColor, typeColor,
-    setEyeCustom,eyeCustom
+    setEyeCustom, eyeCustom,
+    setSingleColorState, singleColorState,
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const { isDarkMode } = useColorStore();
@@ -51,9 +52,9 @@ const Colors = ({
                             <input
                                 type="radio"
                                 name="foregroundMode"
-                                checked={singleColor}
+                                checked={singleColorState}
                                 onChange={() => {
-                                    setSingleColor(true);
+                                    setSingleColorState(true)
                                     setColorGradient(false);
                                 }}
                             />
@@ -65,7 +66,7 @@ const Colors = ({
                                 name="foregroundMode"
                                 checked={colorGradient}
                                 onChange={() => {
-                                    setSingleColor(false);
+                                    setSingleColorState(false);
                                     setColorGradient(true);
                                 }}
                             />
@@ -80,14 +81,14 @@ const Colors = ({
                             Custom Eye Color
                         </label>
                     </div>
-                    {singleColor && (
+                    {singleColorState && (
                         <div className={`flex items-center gap-2 px-3 py-2 rounded-md ${isDarkMode ? 'bg-violet-700 text-white' : 'bg-blue-700 text-black'}`}>
                             <input
                                 type="color"
-                                value={background}
-                                onChange={(e) => setBackground(e.target.value)}
+                                value={singleColor}
+                                onChange={(e) => setSingleColor(e.target.value)}
                             />
-                            <label>{background}</label>
+                            <label>{singleColor}</label>
                         </div>
                     )}
                     {colorGradient && (
@@ -119,16 +120,16 @@ const Colors = ({
                         <div className={`flex items-center gap-2 px-3 py-2 rounded-md ${isDarkMode ? 'bg-violet-700 text-white' : 'bg-blue-700 text-black'}`}>
                             <input
                                 type="color"
-                                value={eyeColor1}
-                                onChange={(e) => setEyeColor1(e.target.value)}
+                                value={eyeFrameColor}
+                                onChange={(e) => setEyeFrameColor(e.target.value)}
                             />
-                            <label>{eyeColor1}</label>
+                            <label>{eyeFrameColor}</label>
                             <input
                                 type="color"
-                                value={eyeColor2}
-                                onChange={(e) => setEyeColor2(e.target.value)}
+                                value={eyeBallColor}
+                                onChange={(e) => setEyeBallColor(e.target.value)}
                             />
-                            <label>{eyeColor2}</label>
+                            <label>{eyeBallColor}</label>
                         </div>
                     </div>
                 )}

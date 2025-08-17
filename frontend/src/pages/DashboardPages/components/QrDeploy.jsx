@@ -1,48 +1,126 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import QRCodeStyling from 'qr-code-styling';
 import useColorStore from '../../../store/colorStore.js';
-import qrimage from '../../../assets/qr.svg';
 import Content from './Content.jsx';
 import Colors from './Colors.jsx';
 import Logo from './Logo.jsx';
 import Design from './Design.jsx';
 const QrDeploy = () => {
     const { isDarkMode } = useColorStore();
-    {/*content states*/}
-    const [url, setUrl] = useState(''); 
-    {/* */}
-    {/*color states*/}
-    const [background, setBackground] = useState('#000000'); 
-    const [singleColor, setSingleColor] = useState(true);  
+    // content states
+    const [url, setUrl] = useState('https://example.com');
+    const [name, setName] = useState('');
+    // color states
+    const [background, setBackground] = useState('#ffffff');
+    const [singleColorState, setSingleColorState] = useState(true);
+    const [singleColor, setSingleColor] = useState('#000000');
     const [colorGradient, setColorGradient] = useState(false);
     const [colorGradient1, setColorGradient1] = useState('#000000');
     const [colorGradient2, setColorGradient2] = useState('#000000');
     const [typeColor, setTypeColor] = useState('linear');
     const [eyeCustom, setEyeCustom] = useState(false);
-    const [eyeColor1, setEyeColor1] = useState('#000000'); 
-    const [eyeColor2, setEyeColor2] = useState('#000000'); 
-    {/* */}
-    {/*logo states*/ }
+    const [eyeFrameColor, setEyeFrameColor] = useState('#000000');
+    const [eyeBallColor, setEyeBallColor] = useState('#000000');
+    // logo states
     const [logo, setLogo] = useState(null);
-    {/* */ }
-    {/*design  states*/ }
-    const [bodyShape, setBodyShape] = useState('');
-    const [eyeFrameShape, setEyeFrameShape] = useState('');
-    const [eyeBallShape, setEyeBallShape] = useState('');
-    {/* */}
+    // design states
+    const [bodyShape, setBodyShape] = useState('square');
+    const [eyeFrameShape, setEyeFrameShape] = useState('square');
+    const [eyeBallShape, setEyeBallShape] = useState('square');
+    const [level, setLevel] = useState('M'); // default to 'M'
+    // qr code ref
+    const qrRef = useRef(null);
+    const qrCode = useRef(null);
+    useEffect(() => {
+        qrCode.current = new QRCodeStyling({
+            width: 300,
+            height: 300,
+            type: 'svg',
+            data: url,
+            margin: 10,
+            image: logo,
+            qrOptions: {
+                errorCorrectionLevel: level || 'M'
+            },
+            dotsOptions: {
+                type: bodyShape,
+                color: singleColorState ? singleColor : undefined,
+                gradient: colorGradient ? {
+                    type: typeColor,
+                    rotation: 0,
+                    colorStops: [
+                        { offset: 0, color: colorGradient1 },
+                        { offset: 1, color: colorGradient2 }
+                    ]
+                } : undefined
+            },
+            cornersSquareOptions: {
+                type: eyeFrameShape,
+                color: eyeCustom ? eyeFrameColor : singleColorState ? singleColor : '#000'
+            },
+            cornersDotOptions: {
+                type: eyeBallShape,
+                color: eyeCustom ? eyeBallColor : singleColorState ? singleColor : '#000'
+            },
+            backgroundOptions: {
+                color: background
+            }
+        });
+        qrCode.current.append(qrRef.current);
+    }, []);
+    useEffect(() => {
+        if (!qrCode.current) return;
+        qrCode.current.update({
+            data: url,
+            qrOptions: {
+                errorCorrectionLevel: level || 'M'
+            },
+            image: logo,
+            dotsOptions: {
+                type: bodyShape,
+                color: singleColorState ? singleColor : undefined,
+                gradient: colorGradient ? {
+                    type: typeColor,
+                    rotation: 0,
+                    colorStops: [
+                        { offset: 0, color: colorGradient1 },
+                        { offset: 1, color: colorGradient2 }
+                    ]
+                } : undefined
+            },
+            cornersSquareOptions: {
+                type: eyeFrameShape,
+                color: eyeCustom ? eyeFrameColor : singleColorState ? singleColor : '#000'
+            },
+            cornersDotOptions: {
+                type: eyeBallShape,
+                color: eyeCustom ? eyeBallColor : singleColorState ? singleColor : '#000'
+            },
+            backgroundOptions: {
+                color: background
+            }
+        });
+    }, [
+        url, logo, bodyShape, eyeFrameShape, eyeBallShape,
+        singleColor, colorGradient, colorGradient1, colorGradient2,
+        typeColor, background, eyeCustom, eyeFrameColor, eyeBallColor,
+        singleColorState, level
+    ]);
     return (
-        <div
-            className={`lg:w-[90%] w-[100%] rounded-xl h-[85vh] overflow-y-auto ${isDarkMode ? 'bg-black' : 'bg-white'
-                } grid lg:grid-cols-12 grid-cols-1 gap-4`}
-        >
+        <div className={`lg:w-[90%] w-[100%] rounded-xl h-[85vh] overflow-y-auto ${isDarkMode ? 'bg-black' : 'bg-white'} grid lg:grid-cols-12 grid-cols-1 gap-4`}>
             <div className="flex flex-col items-center justify-center lg:col-span-8 py-5">
-                <Content setUrl={setUrl} url={url}/>
+                <Content
+                    setUrl={setUrl}
+                    url={url}
+                    setName={setName}
+                    name={name} />
                 <Colors
                     setBackground={setBackground}
                     background={background}
-                    setEyeColor1={setEyeColor1}
-                    eyeColor1={eyeColor1}
-                    setEyeColor2={setEyeColor2}
-                    eyeColor2={eyeColor2}
+                    setEyeFrameColor={setEyeFrameColor}
+                    eyeFrameColor={eyeFrameColor}
+                    setEyeBallColor={setEyeBallColor}
+                    eyeBallColor={eyeBallColor}
                     setSingleColor={setSingleColor}
                     singleColor={singleColor}
                     setColorGradient={setColorGradient}
@@ -55,6 +133,8 @@ const QrDeploy = () => {
                     colorGradient2={colorGradient2}
                     setEyeCustom={setEyeCustom}
                     eyeCustom={eyeCustom}
+                    setSingleColorState={setSingleColorState}
+                    singleColorState={singleColorState}
                 />
                 <Logo
                     setLogo={setLogo}
@@ -65,17 +145,22 @@ const QrDeploy = () => {
                     setEyeFrameShape={setEyeFrameShape}
                     eyeFrameShape={eyeFrameShape}
                     setEyeBallShape={setEyeBallShape}
-                    eyeBallShape={eyeBallShape} />
+                    eyeBallShape={eyeBallShape}
+                    setLevel={setLevel}
+                    level={level} />
             </div>
-            <div className="lg:col-span-4">
-                <div className='h-full w-full p-3 flex flex-col items-center justify-center gap-4'>
-                    <div className={`flex items-center justify-start`}>
-                        <img src={qrimage} alt="" className='object-contain size-80'/>
-                    </div>
-                    <div className='flex flex-row items-center justify-center gap-4'>
-                        <button type='button' className={`${isDarkMode ? 'bg-violet-700 hover:bg-violet-900 text-white' : 'bg-blue-700 hover:bg-blue-900 text-black'}  font-josefinSans px-4 py-3 rounded-lg `}>Download And Save QR</button>
-                    </div>
-                </div>
+            <div className="lg:col-span-4 flex flex-col items-center justify-center gap-4 p-3">
+                <div ref={qrRef} className="qr-code-preview"></div>
+                <button
+                    type='button'
+                    className={`${isDarkMode ? 'bg-violet-700 hover:bg-violet-900 text-white' : 'bg-blue-700 hover:bg-blue-900 text-black'} font-josefinSans px-4 py-3 rounded-lg`}
+                    onClick={() => {
+                        const fileName = name.trim() ? name.trim().replace(/\s+/g, '_') : 'qr-code';
+                        qrCode.current.download({ name: fileName, extension: "svg" });
+                    }}
+                >
+                    Download And Save QR
+                </button>
             </div>
         </div>
     );
