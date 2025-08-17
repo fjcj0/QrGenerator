@@ -7,6 +7,7 @@ import { MdDashboard, MdQrCode, MdLogin, MdPersonAdd, MdLogout,MdCreate } from '
 import DashboardInfoCollapse from './DashboardInfoCollapse.jsx';
 import profileimage from '../assets/bg-profile.png';
 import { FaCamera, FaChevronDown } from 'react-icons/fa';
+import logowhite from '../assets/logo-white.png';
 const Slider = () => {
     const { isDarkMode } = useColorStore();
     const { isSlideOpen } = useSlideStore();
@@ -144,11 +145,27 @@ const Slider = () => {
                     </div>
                 </div>
             </div>
-            <hr className={`${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'} w-full h-[0.3px] ${isSlideOpen ? '' : 'hidden'}`} />
             {isSlideOpen && (
                 <div className="px-3 flex flex-col items-start justify-start my-5 w-full">
                     <DashboardInfoCollapse />
                 </div>
+            )}
+            <hr className={`${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'} w-full h-[0.3px] ${isSlideOpen ? '' : 'hidden'}`} />
+            {isSlideOpen && (
+                <div className='px-3 flex flex-col items-start justify-start my-8 w-full'>
+               <div className="flex flex-col items-center justify-center px-3 py-6 rounded-2xl shadow-lg bg-gradient-to-br from-indigo-400 to-indigo-600 text-white text-center">
+               {/* Logo circle */}
+               <div className="w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-br from-indigo-300 to-indigo-500 -mt-10 shadow-md">
+                 <img src={logowhite} alt="logo" className="w-8 h-8" />
+               </div>
+               {/* Title */}
+               <h2 className="mt-6 text-lg font-bold">Upgrade to PRO</h2>
+               {/* Description */}
+               <p className="mt-2 text-sm opacity-90">
+                 to get access to all features! Connect with Venus World!
+               </p>
+             </div>
+             </div>
             )}
             <div className="my-auto w-full px-3 pb-2 flex items-end justify-center h-[100%]">
                 <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'} text-center text-sm`}>
