@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useAuthStore } from "../../store/authStore";
+import useAuthStore  from "../../store/authStore";
 import { useNavigate, useParams } from "react-router-dom";
 import NewInput from "../../components/NewInput";
 import { Lock } from "lucide-react";
 import toast from "react-hot-toast";
+import Loader from "../../tools/Loader";
 const ResetPasswordPage = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -20,7 +21,7 @@ const ResetPasswordPage = () => {
             await resetPassword(token, password);
             toast.success("Password reset successfully, redirecting to login page...");
             setTimeout(() => {
-                navigate("/signin");
+                navigate("/login");
             }, 2000);
         } catch (error) {
             console.error(error);
@@ -28,10 +29,10 @@ const ResetPasswordPage = () => {
         }
     };
     return (
-        <div className="w-screen h-screen flex items-center justify-center">
-            <div className='max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden'>
+        <div className="w-screen h-screen flex items-center justify-center font-josefinSans">
+            <div className='max-w-md w-full bg-white  backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden'>
                 <div className='p-8'>
-                    <h2 className='text-3xl font-bold mb-6 text-center bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text'>
+                    <h2 className='text-3xl font-bold mb-6 text-center bg-gradient-to-r from-violet-400 to-slate-500 text-transparent bg-clip-text'>
                         Reset Password
                     </h2>
                     {error && <p className='text-red-500 text-sm mb-4'>{error}</p>}
@@ -54,11 +55,11 @@ const ResetPasswordPage = () => {
                             required
                         />
                         <button
-                            className='w-full py-3 px-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-lg shadow-lg hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition duration-200'
+                            className='w-full py-3 px-4 bg-gradient-to-r bg-violet-700 text-white font-bold rounded-lg shadow-lg hover:bg-violet-900 transition duration-200'
                             type='submit'
                             disabled={isLoading}
                         >
-                            {isLoading ? "Resetting..." : "Set New Password"}
+                            {isLoading ? <Loader/> : "Set New Password"}
                         </button>
                     </form>
                 </div>

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import Lottie from 'lottie-react';
-import { FaUser, FaLock } from 'react-icons/fa';
+import { FaUser, FaLock, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import QrAnimation from '../../animations/QRCodeAnimation.json';
 import { Link } from 'react-router-dom';
-import { useAuthStore } from '../../store/authStore.js';
-import {toast} from 'react-hot-toast';
+import useAuthStore from '../../store/authStore.js';
+import { toast } from 'react-hot-toast';
+import Loader from '../../tools/Loader.jsx';
 const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -13,9 +14,9 @@ const LoginPage = () => {
     const { signin, isLoading, error } = useAuthStore();
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if(!isUsernameValid || !isPasswordValid) {
-           toast.error('all fields are required!!');
-           return;
+        if (!isUsernameValid || !isPasswordValid) {
+            toast.error('all fields are required!!');
+            return;
         }
         await signin(username, password);
     };
@@ -72,11 +73,13 @@ const LoginPage = () => {
                             <div className='flex items-center justify-center'>
                                 <button
                                     type='button'
-                                    disabled={isLoading}
+                                    disabled={!(isUsernameValid && isPasswordValid) || isLoading}
                                     onClick={handleSubmit}
-                                    className='border-blue-700 border-[0.2px] px-4 py-2 rounded-lg text-white font-bold font-josefinSans text-xl hover:bg-blue-700'
+                                    className={`border-blue-700 border-[0.2px] px-4 py-2 rounded-lg text-white font-bold font-josefinSans text-xl hover:bg-blue-700
+        ${(!(isUsernameValid && isPasswordValid) || isLoading) ? 'opacity-50 cursor-not-allowed' : 'opacity-100'}
+    `}
                                 >
-                                    {isLoading ? '...' : 'Sign In'}
+                                    {isLoading ? <Loader /> : 'Sign In'}
                                 </button>
                             </div>
                             <div>
@@ -87,6 +90,16 @@ const LoginPage = () => {
                                     </Link>
                                 </p>
                             </div>
+                            <div className='flex flex-col gap-2 my-3'>
+                                <ValidationItem
+                                    valid={isPasswordValid}
+                                    text="Password length 8"
+                                />
+                                <ValidationItem
+                                    valid={isUsernameValid}
+                                    text="Username length 6"
+                                />
+                            </div>
                             {error && <p className='text-red-500 font-semibold my-2'>{error}</p>}
                         </div>
                     </div>
@@ -95,4 +108,14 @@ const LoginPage = () => {
         </div>
     );
 };
+const ValidationItem = ({ valid, text }) => (
+    <p className='text-gray-200 text-sm font-light flex items-center gap-2'>
+        {valid ? (
+            <FaCheckCircle className='text-green-400' />
+        ) : (
+            <FaTimesCircle className='text-red-400' />
+        )}
+        {text}
+    </p>
+);
 export default LoginPage;

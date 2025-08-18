@@ -5,7 +5,9 @@ import { Link } from 'react-router-dom';
 import AdvantagesQr from '../../components/AdvantagesQr';
 import ExamplesQr from '../../components/ExamplesQr';
 import AskedQuestions from '../../components/AskedQuestions';
+import useAuthStore from '../../store/authStore.js';
 const HomePage = () => {
+    const {isAuthenticated} = useAuthStore();
     const features = [
         {
             title: "Dynamic QR Codes",
@@ -51,7 +53,7 @@ const HomePage = () => {
                             />
                         ))}
                     </div>
-                    <Link to={'/dashboard/create-qr'} className='border-[0.3px] border-white text-white px-4 py-3 rounded-xl font-josefinSans font-bold hover:bg-white/80 hover:text-black'>Get Started Now</Link>
+                    <Link      to={isAuthenticated ? '/dashboard/create-qr' : '/login'} className='border-[0.3px] border-white text-white px-4 py-3 rounded-xl font-josefinSans font-bold hover:bg-white/80 hover:text-black'>Get Started Now</Link>
                 </div>
             </div>
             <AdvantagesQr />

@@ -2,17 +2,17 @@ import { create } from 'zustand';
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 const VITE_API_USER_URL = import.meta.env.MODE === "development" ? "http://localhost:8080/api/auth" : "/api/auth";
-export const useAuthStore = create((set) => ({
+const useAuthStore = create((set) => ({
     user: null,
     isAuthenticated: false,
     error: null,
     isLoading: false,
     isCheckingAuth: true,
-    signup: async (username, email, firstName,lastName, password) => {
+    signup: async (username, email, firstName,lastName, password,confirmPassword) => {
         set({ isLoading: true, error: null });
         try {
             const response = await axios.post(`${VITE_API_USER_URL}/signup`, {
-                username, email, firstName,lastName, password
+                username, email, firstName,lastName, password,confirmPassword
             });
             set({ user: response.data.user, isAuthenticated: true, isLoading: false });
         } catch (error) {
@@ -126,3 +126,4 @@ export const useAuthStore = create((set) => ({
         }
     },
 }));
+export default useAuthStore;

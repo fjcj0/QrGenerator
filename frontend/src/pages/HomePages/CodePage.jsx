@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
-import { useAuthStore } from '../../store/authStore.js';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import Loader from '../../tools/Loader.jsx';
+import useAuthStore from '../../store/authStore.js';
 const CodePage = () => {
     const [code, setCode] = useState(['', '', '', '', '', '']);
     const handleChange = (value, index) => {
@@ -57,10 +58,10 @@ const CodePage = () => {
                 </div>
                 <button
                     disabled={!isCodeValid || isLoading}
-                    className='w-full bg-green-600 text-white font-semibold py-2 rounded-md hover:bg-green-800 
+                    className='w-full bg-violet-700 text-white font-semibold py-2 rounded-md hover:bg-violet-900 
                     disabled:opacity-50 disabled:cursor-not-allowed duration-300 transition'
                     onClick={handleSubmit}>
-                    {isLoading ? '...' : 'Verify Code'}
+                    {isLoading ? <Loader/> : 'Verify Code'}
                 </button>
                 {error && <p className='text-red-500 font-semibold my-2'>{error}</p>}
             </div>

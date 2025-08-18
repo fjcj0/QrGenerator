@@ -8,7 +8,9 @@ import DashboardInfoCollapse from './DashboardInfoCollapse.jsx';
 import profileimage from '../assets/bg-profile.png';
 import { FaCamera, FaChevronDown } from 'react-icons/fa';
 import logowhite from '../assets/logo-white.png';
+import  useAuthStore  from '../store/authStore.js';
 const Slider = () => {
+    const { isAuthenticated } = useAuthStore();
     const { isDarkMode } = useColorStore();
     const { isSlideOpen } = useSlideStore();
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
@@ -74,34 +76,38 @@ const Slider = () => {
                 <h1 className={`font-bold text-md mb-2 ${isDarkMode ? 'text-pink-500' : 'text-blue-700'}`}>
                     {isSlideOpen ? 'Authentication' : 'Auth....'}
                 </h1>
-
-                <NavLink
-                    to="/sign-up"
-                    className={({ isActive }) =>
-                        `${linkBaseClasses} ${isActive ? activeClasses : inactiveClasses} ${isSlideOpen ? expandedClasses : collapsedClasses}`
-                    }
-                >
-                    <MdPersonAdd size={20} />
-                    {isSlideOpen && <span>Sign Up</span>}
-                </NavLink>
-                <NavLink
-                    to="/login"
-                    className={({ isActive }) =>
-                        `${linkBaseClasses} ${isActive ? activeClasses : inactiveClasses} ${isSlideOpen ? expandedClasses : collapsedClasses}`
-                    }
-                >
-                    <MdLogin size={20} />
-                    {isSlideOpen && <span>Login</span>}
-                </NavLink>
-                <NavLink
-                    to="/logout"
-                    className={({ isActive }) =>
-                        `${linkBaseClasses} ${isActive ? activeClasses : inactiveClasses} ${isSlideOpen ? expandedClasses : collapsedClasses}`
-                    }
-                >
-                    <MdLogout size={20} />
-                    {isSlideOpen && <span>Logout</span>}
-                </NavLink>
+                {!isAuthenticated ? (
+                    <div className="flex flex-col gap-2">
+                        <NavLink
+                            to="/sign-up"
+                            className={({ isActive }) =>
+                                `${linkBaseClasses} ${isActive ? activeClasses : inactiveClasses} ${isSlideOpen ? expandedClasses : collapsedClasses}`
+                            }
+                        >
+                            <MdPersonAdd size={20} />
+                            {isSlideOpen && <span>Sign Up</span>}
+                        </NavLink>
+                        <NavLink
+                            to="/login"
+                            className={({ isActive }) =>
+                                `${linkBaseClasses} ${isActive ? activeClasses : inactiveClasses} ${isSlideOpen ? expandedClasses : collapsedClasses}`
+                            }
+                        >
+                            <MdLogin size={20} />
+                            {isSlideOpen && <span>Login</span>}
+                        </NavLink>
+                    </div>
+                ) : (
+                    <NavLink
+                        to="/logout"
+                        className={({ isActive }) =>
+                            `${linkBaseClasses} ${isActive ? activeClasses : inactiveClasses} ${isSlideOpen ? expandedClasses : collapsedClasses}`
+                        }
+                    >
+                        <MdLogout size={20} />
+                        {isSlideOpen && <span>Logout</span>}
+                    </NavLink>
+                )}
             </div>
             <hr className={`${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'} w-full h-[0.3px]`} />
             <div className={`${isSlideOpen ? 'flex flex-col items-start justify-start' : 'hidden'} my-5`}>

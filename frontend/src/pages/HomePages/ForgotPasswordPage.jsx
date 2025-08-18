@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useAuthStore } from '../../store/authStore.js';
+import useAuthStore from '../../store/authStore.js';
+import Loader from '../../tools/Loader.jsx';
 const ForgotPasswordPage = () => {
     const [email, setEmail] = useState('');
     const { isLoading, forgotPassword } = useAuthStore();
@@ -10,12 +11,12 @@ const ForgotPasswordPage = () => {
         setSubmit(true);
     };
     return (
-        <div className="w-screen h-screen flex items-center justify-center">
+        <div className="w-screen h-screen flex items-center justify-center font-josefinSans">
             <form
                 onSubmit={handleSubmit}
-                className="bg-green-900 p-8 rounded-2xl shadow-lg w-full max-w-sm"
+                className="bg-slate-950 p-8 rounded-2xl shadow-lg w-full max-w-sm"
             >
-                <h2 className="text-2xl font-semibold mb-6 text-center font-mochiy">
+                <h2 className="text-2xl font-semibold mb-6 text-center text-white">
                     Forgot Password
                 </h2>
                 {!isSubmit ? (
@@ -33,9 +34,9 @@ const ForgotPasswordPage = () => {
                             <button
                                 disabled={isLoading}
                                 type="submit"
-                                className={`bg-blue-600 p-3 font-josefin text-white py-2 rounded-lg hover:bg-blue-700 transition-colors ${isLoading ? 'opacity-50' : ''}`}
+                                className={`bg-violet-700 p-3 font-josefin text-white py-2 rounded-lg hover:bg-violet-900 transition-colors ${isLoading ? 'opacity-50' : ''}`}
                             >
-                                {isLoading ? 'Sending...' : 'Send Reset Link'}
+                                {isLoading ? <Loader/> : 'Send Reset Link'}
                             </button>
                         </div>
                     </>

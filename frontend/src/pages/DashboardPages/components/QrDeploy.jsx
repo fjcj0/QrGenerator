@@ -5,8 +5,13 @@ import Content from './Content.jsx';
 import Colors from './Colors.jsx';
 import Logo from './Logo.jsx';
 import Design from './Design.jsx';
+import useAuthStore from '../../../store/authStore.js';
+import {toast} from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 const QrDeploy = () => {
+    const navigate = useNavigate();
     const { isDarkMode } = useColorStore();
+    const {isAuthenticated} = useAuthStore();
     //file states
     const [extension, setExtension] = useState('svg');
     // content states
@@ -183,6 +188,11 @@ const QrDeploy = () => {
                     type='button'
                     className={`${isDarkMode ? 'bg-violet-700 hover:bg-violet-900 text-white' : 'bg-blue-700 hover:bg-blue-900 text-black'} font-josefinSans px-4 py-3 rounded-lg`}
                     onClick={() => {
+                     if(!isAuthenticated){
+                        toast.error('You have to login!!');
+                        navigate('/login');
+                        return;
+                     }
                         const fileName = name.trim() ? name.trim().replace(/\s+/g, '_') : 'qr-code';
                         qrCode.current.download({ name: fileName, extension: extension });
                     }}
