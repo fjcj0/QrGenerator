@@ -4,8 +4,13 @@ import { Link } from 'react-router-dom';
 import { MdLogin, MdLogout, MdPersonAdd, MdDashboard } from 'react-icons/md';
 import trailer from '../assets/trailer.mp4';
 import  useAuthStore  from '../store/authStore.js';
+import {toast} from 'react-hot-toast';
 const Header = () => {
-    const { isAuthenticated } = useAuthStore();
+    const { isAuthenticated,logout } = useAuthStore();
+    const handleLogout = async () => {
+        await logout();
+        toast.success('Logout successfully!!');
+    };
     return (
         <div className='bg-violet-900/30'>
             <div className='w-full flex items-center justify-between px-5 py-3'>
@@ -18,6 +23,7 @@ const Header = () => {
                             <div className='flex gap-3'>
                                 <button
                                     type='button'
+                                    onClick={handleLogout}
                                     className='bg-red-400 flex items-center justify-center gap-2 px-4 py-2 rounded-xl hover:bg-red-200'>
                                     <MdLogout /> logout
                                 </button>

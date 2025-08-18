@@ -198,17 +198,17 @@ export const editUser = async (request, response) => {
             });
         }
         let ErrorAuth = '';
-        let count = 0;
-        if (newFirstName.length < 4) {
+        let count =0;
+        if (newFirstName && newFirstName.length < 4) {
             ErrorAuth += 'First Name length should be at least 4';
             count++;
         }
-        if (newLastName.length < 4) {
+        if (newLastName && newLastName.length < 4) {
             if (count > 0) ErrorAuth += ' ';
             ErrorAuth += 'Last Name length should be at least 4';
             count++;
         }
-        if (newUsername.length < 6) {
+        if (newUsername && newUsername.length < 6) {
             if (count > 0) ErrorAuth += ' ';
             ErrorAuth += 'Username length should be at least 6';
             count++;

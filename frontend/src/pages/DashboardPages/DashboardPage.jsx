@@ -7,7 +7,9 @@ import ScannerStatsChart from '../../charts/ScannerStatsChart.jsx';
 import Scanner from './components/Scanner.jsx';
 import ScannerChartCard from '../../charts/ScannerChartData.jsx';
 import Loader from '../../tools/Loader.jsx';
+import useAuthStore from '../../store/authStore.js';
 const DashboardPage = () => {
+    const {user} = useAuthStore();
     const [loadingPage, setLoadingPage] = useState(false);
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -42,13 +44,13 @@ const DashboardPage = () => {
                                 <CardDashboardInfo
                                     icon={<FaDollarSign className={`${isDarkMode ? 'text-black' : 'text-white'} text-2xl`} />}
                                     title='Total Money Lost'
-                                    value='$500.00'
+                                    value={`${user ? '$'+user?.totalMoneyLost : '$0'}`}
                                     background='bg-purple-700'
                                 />
                                 <CardDashboardInfo
                                     icon={<FaQrcode className={`${isDarkMode ? 'text-black' : 'text-white'} text-2xl`} />}
                                     title='Total Free QR'
-                                    value='10'
+                                    value={`${user ? user?.totalFreeQr : '0'}`}
                                     background='bg-blue-500'
                                 />
                             </div>
@@ -56,13 +58,13 @@ const DashboardPage = () => {
                                 <CardDashboardOne
                                     icon={<FaUsers className={`${isDarkMode ? 'text-black' : 'text-white'} text-2xl`} />}
                                     title='Total Scanners'
-                                    value='50 Times'
+                                    value='0 Times'
                                     background='bg-red-500'
                                 />
                                 <CardDashboardOne
                                     icon={<FaChartLine className={`${isDarkMode ? 'text-black' : 'text-white'} text-2xl`} />}
                                     title='Total QR'
-                                    value='40'
+                                    value='0'
                                     background='bg-yellow-500'
                                 />
                             </div>

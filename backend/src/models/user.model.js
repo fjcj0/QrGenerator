@@ -34,6 +34,18 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    totalFreeQr: {
+        type: Number,
+        default: 10
+    },
+    totalMoneyLost: {
+        type: Number,
+        default: 0.0,
+    },
+    isPaid: {
+        type: Boolean,
+        default: false,
+    },
     resetPasswordToken: String,
     resetPasswordExpiresAt: Date,
     verificationToken: String,
