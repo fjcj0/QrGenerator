@@ -4,6 +4,7 @@ import useColorStore from '../store/colorStore.js';
 import Slider from '../components/Slider.jsx';
 import useSlideStore from '../store/slideStore.js';
 import { MdSettings, MdList, MdDarkMode } from 'react-icons/md';
+import Loader from '../tools/Loader.jsx';
 const UserDashboardLayout = () => {
     const { isDarkMode, toggleDarkMode } = useColorStore();
     const { isSlideOpen, toggleSlide } = useSlideStore();

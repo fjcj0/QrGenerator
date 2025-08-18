@@ -20,7 +20,7 @@ const CodePage = () => {
         try {
             const joinedCode = code.join('');
             await verifyEmail(joinedCode);
-            navigate('/');
+            navigate('/dashboard');
             toast.success('Email is verified');
         } catch (error) {
             console.log(error.message);

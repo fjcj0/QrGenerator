@@ -9,7 +9,6 @@ import {
     FaUser,
     FaEnvelope,
     FaLock,
-    FaIdBadge,
     FaCheckCircle,
     FaTimesCircle
 } from 'react-icons/fa';
@@ -174,8 +173,6 @@ const SignUpPage = () => {
                                 >
                                     {isLoading ? <Loader /> : 'Sign Up'}
                                 </button>
-
-
                             </div>
                             <div className=''>
                                 <p className='text-white font-josefinSans text-sm'>do you have an account? <Link to={'/login'} className='text-blue-700'>{'sign in'}</Link></p>
