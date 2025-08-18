@@ -123,13 +123,13 @@ const Profile = () => {
                             <p>Email: {isAuthenticated ? user.email : 'N/A'}</p>
                         </div>
                     ) : (
-                        <div className='grid grid-cols-1 gap-3 mt-3 font-josefinSans'>
-                            <input type='text' placeholder='Enter first name' className={`px-3 py-2 rounded-lg ${isDarkMode ? 'bg-white text-black placeholder:text-black outline-blue-700' : 'bg-black text-white placeholder:text-white outline-blue-700'}`}
+                        <div className='grid grid-cols-1 gap-3 mt-3 font-josefinSans px-3'>
+                            <input type='text' placeholder='Enter first name' className={`px-3 py-2 rounded-lg ${isDarkMode ? 'bg-white text-black placeholder:text-black outline-black' : 'bg-black text-white placeholder:text-white outline-white'}`}
                                 defaultValue={user?.firstName}
                                 onChange={(e) => setNewFirstName(e.target.value)} />
-                            <input type='text' placeholder='Enter last name' className={`px-3 py-2 rounded-lg ${isDarkMode ? 'bg-white text-black placeholder:text-black outline-blue-700' : 'bg-black text-white placeholder:text-white outline-blue-700'}`}
+                            <input type='text' placeholder='Enter last name' className={`px-3 py-2 rounded-lg ${isDarkMode ? 'bg-white text-black placeholder:text-black outline-black' : 'bg-black text-white placeholder:text-white outline-white'}`}
                                 onChange={(e) => setNewLastName(e.target.value)} defaultValue={user?.lastName} />
-                            <input type='text' placeholder='Enter username' className={`px-3 py-2 rounded-lg ${isDarkMode ? 'bg-white text-black placeholder:text-black outline-blue-700' : 'bg-black text-white placeholder:text-white outline-blue-700'}`}
+                            <input type='text' placeholder='Enter username' className={`px-3 py-2 rounded-lg ${isDarkMode ? 'bg-white text-black placeholder:text-black outline-black' : 'bg-black text-white placeholder:text-white outline-white'}`}
                                 onChange={(e) => setNewUsername(e.target.value)} defaultValue={user?.username} />
                             <div className='w-full items-start justify-start'>
                                 <button
