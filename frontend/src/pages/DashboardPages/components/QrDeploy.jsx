@@ -34,7 +34,7 @@ const QrDeploy = () => {
     const [bodyShape, setBodyShape] = useState('square');
     const [eyeFrameShape, setEyeFrameShape] = useState('square');
     const [eyeBallShape, setEyeBallShape] = useState('square');
-    const [level, setLevel] = useState('M'); // default to 'M'
+    const [level, setLevel] = useState('M'); 
     // qr code ref
     const qrRef = useRef(null);
     const qrCode = useRef(null);
@@ -113,6 +113,37 @@ const QrDeploy = () => {
         typeColor, background, eyeCustom, eyeFrameColor, eyeBallColor,
         singleColorState, level
     ]);
+    //Qr Config
+    const qrConfig = {
+        width: 300,
+        height: 300,
+        type: extension,
+        data: url,
+        margin: 10,
+        image: logo,
+        qrOptions: { errorCorrectionLevel: level || 'M' },
+        dotsOptions: {
+            type: bodyShape,
+            color: singleColorState ? singleColor : undefined,
+            gradient: colorGradient ? {
+                type: typeColor,
+                rotation: 0,
+                colorStops: [
+                    { offset: 0, color: colorGradient1 },
+                    { offset: 1, color: colorGradient2 }
+                ]
+            } : undefined
+        },
+        cornersSquareOptions: {
+            type: eyeFrameShape,
+            color: eyeCustom ? eyeFrameColor : singleColorState ? singleColor : '#000'
+        },
+        cornersDotOptions: {
+            type: eyeBallShape,
+            color: eyeCustom ? eyeBallColor : singleColorState ? singleColor : '#000'
+        },
+        backgroundOptions: { color: background }
+    };    
     return (
         <div className={`lg:w-[90%] w-[100%] rounded-xl h-[85vh] overflow-y-auto ${isDarkMode ? 'bg-black' : 'bg-white'} grid lg:grid-cols-12 grid-cols-1 gap-4`}>
             <div className="flex flex-col items-center justify-center lg:col-span-8 py-5">
