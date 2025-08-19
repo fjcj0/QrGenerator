@@ -1,6 +1,10 @@
 import express from 'express';
+import multer from 'multer';
 import { verifyToken } from '../middleware/verifyToken.js';
-import { saveQr } from '../controllers/qr.controller.js';
+import { saveQr, deleteQrs } from '../controllers/qr.controller.js';
 const router = express.Router();
-router.post('/save',verifyToken,saveQr);
+const storage = multer.memoryStorage(); 
+const upload = multer({ storage });
+router.post('/save', verifyToken, upload.single('logo'), saveQr);
+router.delete('/delete', verifyToken, deleteQrs);
 export default router;
