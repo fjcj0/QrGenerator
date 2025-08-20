@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import useColorStore from '../../../store/colorStore.js';
 import { FaPlus, FaMinus, FaImage } from 'react-icons/fa';
 import { logos } from '../../../data.js';
-const Logo = ({ setLogo, logo }) => {
+const Logo = ({ setLogo, logo,setLogoCloudaniry, logoCloudaniry}) => {
   const { isDarkMode } = useColorStore();
   const [isOpen, setIsOpen] = useState(false);
   return (
@@ -56,7 +56,10 @@ const Logo = ({ setLogo, logo }) => {
                 id="upload-logo"
                 onChange={(e) => {
                   const file = e.target.files[0];
-                  if (file) setLogo(URL.createObjectURL(file));
+                  if (file){
+                     setLogoCloudaniry(file);
+                     setLogo(URL.createObjectURL(file));
+                  }
                 }}
               />
               <label htmlFor="upload-logo" className={`px-4 py-2 rounded-lg font-poppins font-bold text-sm cursor-pointer ${isDarkMode ? 'bg-violet-700 text-white hover:bg-violet-900' : 'bg-blue-700 text-black hover:bg-blue-900'}`}>
@@ -65,7 +68,10 @@ const Logo = ({ setLogo, logo }) => {
               {logo && (
                 <button
                   type='button'
-                  onClick={() => setLogo(null)}
+                  onClick={() =>{ 
+                    setLogo(null);
+                    setLogoCloudaniry(null);
+                  }}
                   className={`px-4 py-2 rounded-lg font-poppins font-bold text-sm ${isDarkMode ? 'border-[1px] border-violet-700 text-white hover:bg-violet-700' : 'border-[1px] border-blue-700 text-black hover:bg-blue-700'}`}
                 >
                   Remove Image
@@ -79,7 +85,10 @@ const Logo = ({ setLogo, logo }) => {
                 type='button'
                 key={logoItem.id}
                 className={`${isDarkMode ? 'bg-yellow-700 hover:bg-yellow-900' : 'bg-slate-700 hover:bg-slate-900'} w-[3.3rem] h-[3.3rem] flex items-center justify-center rounded-lg`}
-                onClick={() => setLogo(logoItem.src)}
+                onClick={() =>{ 
+                  setLogo(logoItem.src);
+                  setLogoCloudaniry(logoItem.src);
+                }}
               >
                 <img src={logoItem.src} alt={logoItem.alt} className="w-10 h-10 object-contain" />
               </button>

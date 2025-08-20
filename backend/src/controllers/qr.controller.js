@@ -32,7 +32,7 @@ export const saveQr = async (req, res) => {
         imageOptions: {
           crossOrigin: 'anonymous',
           margin: 5,
-          imageSize: 0.3,
+          imageSize: 0.2 
         },
       };
     }
@@ -116,9 +116,8 @@ export const deleteQrs = async (req, res) => {
               const parts = imageDoc.logoUrl.split('/');
               const filename = parts.pop(); 
               const folder = parts.slice(parts.indexOf('upload') + 1).join('/'); 
-              const publicId = folder + '/' + filename.split('.')[0]; 
-              await cloudinary.uploader.destroy(publicId);
-              console.log(`✅ Deleted logo from Cloudinary: ${publicId}`);
+              const publicId = imageDoc.logoUrl.split('/').pop().split('.')[0];
+              await cloudinary.uploader.destroy(`QrLogos/${publicId}`);
             } catch (err) {
               console.warn('⚠️ Failed to delete logo from Cloudinary:', err.message);
             }
@@ -130,7 +129,7 @@ export const deleteQrs = async (req, res) => {
       deletedQrs.push(qrId);
     }
     res.status(200).json({ 
-      message: 'Selected QR codes deleted successfully', 
+      message: 'Selected QR codes deleted successfully!!', 
       deletedQrs 
     });
   } catch (error) {

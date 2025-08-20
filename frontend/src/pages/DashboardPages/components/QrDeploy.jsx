@@ -8,7 +8,10 @@ import Design from './Design.jsx';
 import useAuthStore from '../../../store/authStore.js';
 import {toast} from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import useQrStore from '../../../store/qrStore.js';
 const QrDeploy = () => {
+    const {saveQr,isLoadingButton} = useQrStore();
+    const {user} = useAuthStore();
     const navigate = useNavigate();
     const { isDarkMode } = useColorStore();
     const {isAuthenticated} = useAuthStore();
@@ -30,6 +33,7 @@ const QrDeploy = () => {
     const [eyeBallColor, setEyeBallColor] = useState('#000000');
     // logo states
     const [logo, setLogo] = useState(null);
+    const [logoCloudaniry,setLogoCloudaniry] = useState(null);
     // design states
     const [bodyShape, setBodyShape] = useState('square');
     const [eyeFrameShape, setEyeFrameShape] = useState('square');
@@ -120,7 +124,6 @@ const QrDeploy = () => {
         type: extension,
         data: url,
         margin: 10,
-        image: logo,
         qrOptions: { errorCorrectionLevel: level || 'M' },
         dotsOptions: {
             type: bodyShape,
@@ -144,6 +147,21 @@ const QrDeploy = () => {
         },
         backgroundOptions: { color: background }
     };    
+    const saveQrCode = async () => {
+        try{
+            if(!isAuthenticated){
+                toast.error('You have to login!!');
+                navigate('/login');
+                return;
+             }
+             await saveQr(logoCloudaniry,user?._id,name,qrConfig,null);
+            const fileName = name.trim() ? name.trim().replace(/\s+/g, '_') : 'qr-code';
+            qrCode.current.download({ name: fileName, extension: extension });
+            toast.success('QR has been saved successfully!!');
+        }catch(error){
+            toast.error(error.message);
+        }
+    };
     return (
         <div className={`lg:w-[90%] w-[100%] rounded-xl h-[85vh] overflow-y-auto ${isDarkMode ? 'bg-black' : 'bg-white'} grid lg:grid-cols-12 grid-cols-1 gap-4`}>
             <div className="flex flex-col items-center justify-center lg:col-span-8 py-5">
@@ -176,7 +194,9 @@ const QrDeploy = () => {
                 />
                 <Logo
                     setLogo={setLogo}
-                    logo={logo} />
+                    logo={logo} 
+                    setLogoCloudaniry={setLogoCloudaniry}
+                    logoCloudaniry={logoCloudaniry}/>
                 <Design
                     setBodyShape={setBodyShape}
                     bodyShape={bodyShape}
@@ -217,16 +237,9 @@ const QrDeploy = () => {
                 </div>
                 <button
                     type='button'
-                    className={`${isDarkMode ? 'bg-violet-700 hover:bg-violet-900 text-white' : 'bg-blue-700 hover:bg-blue-900 text-black'} font-josefinSans px-4 py-3 rounded-lg`}
-                    onClick={() => {
-                     if(!isAuthenticated){
-                        toast.error('You have to login!!');
-                        navigate('/login');
-                        return;
-                     }
-                        const fileName = name.trim() ? name.trim().replace(/\s+/g, '_') : 'qr-code';
-                        qrCode.current.download({ name: fileName, extension: extension });
-                    }}
+                    disabled={isLoadingButton}
+                    className={`${isDarkMode ? 'bg-violet-700 hover:bg-violet-900 text-white' : 'bg-blue-700 hover:bg-blue-900 text-black'} font-josefinSans px-4 py-3 rounded-lg ${isLoadingButton ? 'opacity-50' : ''}`}
+                    onClick={saveQrCode}
                 >
                     Download And Save QR
                 </button>
