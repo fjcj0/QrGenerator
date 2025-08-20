@@ -45,6 +45,14 @@ export const saveQr = async (req, res) => {
         },
       };
     }
+    const bgColor =
+      (config.backgroundOptions && config.backgroundOptions.color) ||
+      config.background ||
+      '#FFFFFF';
+    const isDarkBg = ['#000', '#000000', 'black'].includes(bgColor.toLowerCase());
+    config.dotsOptions = config.dotsOptions || {};
+    config.dotsOptions.color = config.dotsOptions.color || (isDarkBg ? '#FFFFFF' : '#000000');
+    
     const qrCode = new QRCodeCanvas(config);
     const fileType = (config?.type || 'png').toLowerCase();
     const uploadDir = path.join(process.cwd(), 'src/uploads/qrs');
@@ -168,6 +176,7 @@ export const deleteQrs = async (req, res) => {
         }
       }
       await QRCodeModel.findByIdAndDelete(qrId);
+      await Scanner.deleteMany({qrId});
       deletedQrs.push(qrId);
     }
     res.status(200).json({

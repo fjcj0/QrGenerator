@@ -47,7 +47,21 @@ const useQrStore = create((set,get) => ({
             throw new Error(error.response?.data?.message || error.message);
         }
     },    
-    getQRS: async (userId) => {
+    deleteQRS: async (qrsToDelete) => {
+        set({error:null,isLoadingButton:true});
+        try{
+            await axios.delete(
+                `${VITE_API_USER_URL}/delete?qrIds=${qrsToDelete.join(",")}`
+            );              
+            set({ isLoadingButton: false });
+        }catch(error){
+            set({
+                error: error.response?.data?.message || error.message,
+                isLoadingButton: false,
+            });
+            throw new Error(error.response?.data?.message || error.message);
+        }
+    },getQRS: async (userId) => {
         set({ error: null });
         try {
             const response = await axios.get(`${VITE_API_USER_URL}/user/${userId}`);
