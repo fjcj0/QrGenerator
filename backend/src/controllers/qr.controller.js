@@ -7,23 +7,33 @@ import { QRCode as QRCodeModel } from '../models/qr.model.js';
 import cloudinary from '../utils/cloudinary.js';
 export const saveQr = async (req, res) => {
   try {
-    const { userId, name, config, qrId } = req.body;
-    let logoFile = req.files?.logo; 
-    if (!config || !name) {
+    const { userId, name, config: configBody, qrId } = req.body;
+    const logoFile = req.file; 
+    if (!configBody || !name) {
       return res.status(400).json({ message: 'Name and config are required' });
     }
+    let config = typeof configBody === 'string' ? JSON.parse(configBody) : configBody;
+    let logoUrl = null;
     if (logoFile) {
-      const uploadResult = await cloudinary.uploader.upload(logoFile[0].path, {
-        folder: 'qr-logos',
+      const uploadResult = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: 'QrLogos' },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          }
+        );
+        stream.end(logoFile.buffer);
       });
-      const logoUrl = uploadResult.secure_url;
+      logoUrl = uploadResult.secure_url;
       config = {
         ...config,
         image: logoUrl,
         imageOptions: {
           crossOrigin: 'anonymous',
-          margin: 5
-        }
+          margin: 5,
+          imageSize: 0.3,
+        },
       };
     }
     const qrCode = new QRCodeCanvas(config);
@@ -46,32 +56,40 @@ export const saveQr = async (req, res) => {
           if (fs.existsSync(oldFilePath)) fs.unlinkSync(oldFilePath);
           imageDoc = await QRImages.findByIdAndUpdate(
             qrDocument.imageId,
-            { image: `/uploads/qrs/${fileName}`, logoUrl: logoFile ? uploadResult.secure_url : null },
+            { image: `/uploads/qrs/${fileName}`, logoUrl: logoUrl },
             { new: true }
           );
         }
       }
       if (!imageDoc) {
-        imageDoc = await QRImages.create({ userId, image: `/uploads/qrs/${fileName}`, logoUrl: logoFile ? uploadResult.secure_url : null });
+        imageDoc = await QRImages.create({
+          userId,
+          image: `/uploads/qrs/${fileName}`,
+          logoUrl: logoUrl,
+        });
       }
       qrDocument.name = name;
       qrDocument.config = config;
       qrDocument.imageId = imageDoc._id;
       await qrDocument.save();
     } else {
-      imageDoc = await QRImages.create({ userId, image: `/uploads/qrs/${fileName}`, logoUrl: logoFile ? uploadResult.secure_url : null });
+      imageDoc = await QRImages.create({
+        userId,
+        image: `/uploads/qrs/${fileName}`,
+        logoUrl: logoUrl,
+      });
       qrDocument = new QRCodeModel({
         userId,
         name,
         config,
-        imageId: imageDoc._id
+        imageId: imageDoc._id,
       });
       await qrDocument.save();
     }
     res.status(201).json({
       message: 'QR code saved successfully',
       qr: qrDocument,
-      qrImage: imageDoc
+      qrImage: imageDoc,
     });
   } catch (error) {
     console.error('Error saving QR code:', error);
@@ -93,6 +111,18 @@ export const deleteQrs = async (req, res) => {
         if (imageDoc) {
           const filePath = path.join(process.cwd(), 'src', imageDoc.image);
           if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+          if (imageDoc.logoUrl) {
+            try {
+              const parts = imageDoc.logoUrl.split('/');
+              const filename = parts.pop(); 
+              const folder = parts.slice(parts.indexOf('upload') + 1).join('/'); 
+              const publicId = folder + '/' + filename.split('.')[0]; 
+              await cloudinary.uploader.destroy(publicId);
+              console.log(`✅ Deleted logo from Cloudinary: ${publicId}`);
+            } catch (err) {
+              console.warn('⚠️ Failed to delete logo from Cloudinary:', err.message);
+            }
+          }
           await QRImages.findByIdAndDelete(imageDoc._id);
         }
       }
