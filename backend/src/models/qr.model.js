@@ -26,5 +26,4 @@ const qrSchema = new mongoose.Schema({
     default: null  
   }
 });
-
 export const QRCode = mongoose.model('QRCode', qrSchema);

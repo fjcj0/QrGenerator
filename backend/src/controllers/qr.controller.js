@@ -138,3 +138,21 @@ export const deleteQrs = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+export const getUserQrs = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    if (!userId) {
+      return res.status(400).json({ message: "userId is required" });
+    }
+    const qrs = await QRCodeModel.find({ userId })
+      .populate("imageId", "image logo createdAt")
+      .sort({ createdAt: -1 }); 
+    if (!qrs || qrs.length === 0) {
+      return res.status(404).json({ message: "No QR codes found for this user" });
+    }
+    res.status(200).json({ qrs });
+  } catch (error) {
+    console.error("Error fetching user QR codes:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
