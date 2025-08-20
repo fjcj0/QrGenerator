@@ -9,9 +9,11 @@ import ScannerChartCard from '../../charts/ScannerChartData.jsx';
 import Loader from '../../tools/Loader.jsx';
 import useAuthStore from '../../store/authStore.js';
 import useQrStore from '../../store/qrStore.js';
+import useScannerStore from '../../store/scannerStore.js';
 const DashboardPage = () => {
-    const {user} = useAuthStore();
-    const {totalQr,getQRS} = useQrStore();
+    const { user } = useAuthStore();
+    const { getQrsUserScans, userQrsScans, totalScan } = useScannerStore();
+    const { totalQr, getQRS } = useQrStore();
     const [loadingPage, setLoadingPage] = useState(false);
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -19,22 +21,14 @@ const DashboardPage = () => {
         }, 1000);
         return () => clearTimeout(timer);
     }, []);
+    console.log(userQrsScans);
     const { isDarkMode } = useColorState();
-    const scannerData = [
-        { id: 1, name: 'Main Entrance', date: '2025-08-01', totalScanner: 25 },
-        { id: 2, name: 'Lobby', date: '2025-08-02', totalScanner: 30 },
-        { id: 3, name: 'Parking Lot', date: '2025-08-03', totalScanner: 15 },
-        { id: 4, name: 'Reception', date: '2025-08-04', totalScanner: 20 },
-        { id: 5, name: 'Office 101', date: '2025-08-05', totalScanner: 10 },
-        { id: 6, name: 'Office 102', date: '2025-08-06', totalScanner: 18 },
-        { id: 7, name: 'Cafeteria', date: '2025-08-07', totalScanner: 12 },
-        { id: 8, name: 'Conference Room', date: '2025-08-08', totalScanner: 22 },
-        { id: 9, name: 'Storage', date: '2025-08-09', totalScanner: 8 },
-        { id: 10, name: 'Server Room', date: '2025-08-10', totalScanner: 5 },
-    ];
-    useEffect(()=>{
-        getQRS(user._id);
-    },[totalQr,user?._d]);
+    useEffect(() => {
+        getQRS(user?._id);
+    }, [totalQr, user?._d]);
+    useEffect(() => {
+        getQrsUserScans(user?._id);
+    }, []);
     return (
         <div className='p-3'>
             {
@@ -49,7 +43,7 @@ const DashboardPage = () => {
                                 <CardDashboardInfo
                                     icon={<FaDollarSign className={`${isDarkMode ? 'text-black' : 'text-white'} text-2xl`} />}
                                     title='Total Money Lost'
-                                    value={`${user ? '$'+user?.totalMoneyLost : '$0'}`}
+                                    value={`${user ? '$' + user?.totalMoneyLost : '$0'}`}
                                     background='bg-purple-700'
                                 />
                                 <CardDashboardInfo
@@ -63,7 +57,7 @@ const DashboardPage = () => {
                                 <CardDashboardOne
                                     icon={<FaUsers className={`${isDarkMode ? 'text-black' : 'text-white'} text-2xl`} />}
                                     title='Total Scanners'
-                                    value='0 Times'
+                                    value={`${totalScan} Times`}
                                     background='bg-red-500'
                                 />
                                 <CardDashboardOne
@@ -96,12 +90,14 @@ const DashboardPage = () => {
                                         <ScannerChartCard />
                                     </div>
                                     <div className='flex flex-col gap-4'>
-                                        {scannerData.map((scanner) => (
+                                        {userQrsScans && userQrsScans.map((scanner) => (
                                             <Scanner
-                                                key={scanner.id}
+                                                key={scanner.qrId}
                                                 name={scanner.name}
-                                                date={scanner.date}
-                                                totalScanner={scanner.totalScanner}
+                                                date={scanner.scans && scanner.scans.length > 0
+                                                    ? new Date(scanner.scans[0].scannedAt).toLocaleString()
+                                                    : "No scans yet"}
+                                                totalScanner={scanner.totalScans}
                                             />
                                         ))}
                                     </div>

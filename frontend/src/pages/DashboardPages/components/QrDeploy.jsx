@@ -9,6 +9,7 @@ import useAuthStore from '../../../store/authStore.js';
 import {toast} from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import useQrStore from '../../../store/qrStore.js';
+import Loader from '../../../tools/Loader.jsx';
 const QrDeploy = () => {
     const {saveQr,isLoadingButton} = useQrStore();
     const {user} = useAuthStore();
@@ -117,7 +118,6 @@ const QrDeploy = () => {
         typeColor, background, eyeCustom, eyeFrameColor, eyeBallColor,
         singleColorState, level
     ]);
-    //Qr Config
     const qrConfig = {
         width: 300,
         height: 300,
@@ -240,7 +240,7 @@ const QrDeploy = () => {
                     className={`${isDarkMode ? 'bg-violet-700 hover:bg-violet-900 text-white' : 'bg-blue-700 hover:bg-blue-900 text-black'} font-josefinSans px-4 py-3 rounded-lg ${isLoadingButton ? 'opacity-50' : ''}`}
                     onClick={saveQrCode}
                 >
-                    Download And Save QR
+                    {isLoadingButton ? <Loader/> : 'Download And Save QR'}
                 </button>
             </div>
         </div>

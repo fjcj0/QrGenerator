@@ -7,6 +7,7 @@ import { QRCode as QRCodeModel } from '../models/qr.model.js';
 import cloudinary from '../utils/cloudinary.js';
 import { User } from '../models/user.model.js';
 import { Scanner } from '../models/scanner.model.js';
+import dotenv from "dotenv";
 export const saveQr = async (req, res) => {
   try {
     const { userId, name, config: configBody, qrId, url } = req.body;
@@ -14,9 +15,11 @@ export const saveQr = async (req, res) => {
     if (!configBody || !name) {
       return res.status(400).json({ message: 'Name and config are required' });
     }
+    dotenv.config({ quiet: true });
+    const BASE_URL = process.env.MODE === "development" ? "http://localhost:8080" : "";
     let config = typeof configBody === 'string' ? JSON.parse(configBody) : configBody;
     const tokenURL = crypto.randomBytes(8).toString('hex');
-    const unrealDestination = `localhost:8080/api/qr/scan/${tokenURL}`;
+    const unrealDestination = `${BASE_URL}/api/qr/scan/${tokenURL}`;
     let logoUrl = null;
     if (logoFile) {
       const uploadResult = await new Promise((resolve, reject) => {
@@ -193,5 +196,31 @@ export const getUserQrs = async (req, res) => {
   } catch (error) {
     console.error("Error fetching user QR codes:", error);
     res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+export const getUserQrScans = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    if (!userId) {
+      return res.status(400).json({ message: 'Invalid userId' });
+    }
+    const userQrs = await QRCodeModel.find({ userId }).select('_id name token');
+    const qrIds = userQrs.map(qr => qr._id);
+    const scans = await Scanner.find({ qrId: { $in: qrIds } });
+    const result = userQrs.map(qr => {
+      const qrScans = scans.filter(scan => scan.qrId.toString() === qr._id.toString());
+      const totalScans = qrScans.reduce((sum, scan) => sum + (scan.scanCount || 0), 0);
+      return {
+        qrId: qr._id,
+        name: qr.name,
+        token: qr.token,
+        totalScans,
+        scans: qrScans
+      };
+    });
+    return res.json(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
