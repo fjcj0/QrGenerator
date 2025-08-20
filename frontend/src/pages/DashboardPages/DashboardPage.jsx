@@ -8,8 +8,10 @@ import Scanner from './components/Scanner.jsx';
 import ScannerChartCard from '../../charts/ScannerChartData.jsx';
 import Loader from '../../tools/Loader.jsx';
 import useAuthStore from '../../store/authStore.js';
+import useQrStore from '../../store/qrStore.js';
 const DashboardPage = () => {
     const {user} = useAuthStore();
+    const {totalQr,getQRS,qrs} = useQrStore();
     const [loadingPage, setLoadingPage] = useState(false);
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -30,6 +32,9 @@ const DashboardPage = () => {
         { id: 9, name: 'Storage', date: '2025-08-09', totalScanner: 8 },
         { id: 10, name: 'Server Room', date: '2025-08-10', totalScanner: 5 },
     ];
+    useEffect(()=>{
+        getQRS(user._id);
+    },[totalQr,qrs,user?._d]);
     return (
         <div className='p-3'>
             {
@@ -64,7 +69,7 @@ const DashboardPage = () => {
                                 <CardDashboardOne
                                     icon={<FaChartLine className={`${isDarkMode ? 'text-black' : 'text-white'} text-2xl`} />}
                                     title='Total QR'
-                                    value='0'
+                                    value={totalQr}
                                     background='bg-yellow-500'
                                 />
                             </div>

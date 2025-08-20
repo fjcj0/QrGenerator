@@ -5,10 +5,11 @@ import { QRCodeCanvas } from '@loskir/styled-qr-code-node';
 import { QRImages } from '../models/image.model.js';
 import { QRCode as QRCodeModel } from '../models/qr.model.js';
 import cloudinary from '../utils/cloudinary.js';
+import { User } from '../models/user.model.js';
 export const saveQr = async (req, res) => {
   try {
     const { userId, name, config: configBody, qrId } = req.body;
-    const logoFile = req.file; 
+    const logoFile = req.file;
     if (!configBody || !name) {
       return res.status(400).json({ message: 'Name and config are required' });
     }
@@ -31,9 +32,9 @@ export const saveQr = async (req, res) => {
         image: logoUrl,
         imageOptions: {
           crossOrigin: 'anonymous',
-          margin: 0,              
-          imageSize: 0.3,       
-          hideBackgroundDots: true,  
+          margin: 0,
+          imageSize: 0.3,
+          hideBackgroundDots: true,
         },
       };
     }
@@ -74,18 +75,23 @@ export const saveQr = async (req, res) => {
       qrDocument.imageId = imageDoc._id;
       await qrDocument.save();
     } else {
-      imageDoc = await QRImages.create({
-        userId,
-        image: `/uploads/qrs/${fileName}`,
-        logoUrl: logoUrl,
-      });
-      qrDocument = new QRCodeModel({
-        userId,
-        name,
-        config,
-        imageId: imageDoc._id,
-      });
-      await qrDocument.save();
+      const user = await User.findById(userId);
+      if (user && user.totalFreeQr > 0) {
+        imageDoc = await QRImages.create({
+          userId,
+          image: `/uploads/qrs/${fileName}`,
+          logoUrl: logoUrl,
+        });
+        qrDocument = new QRCodeModel({
+          userId,
+          name,
+          config,
+          imageId: imageDoc._id,
+        });
+        await qrDocument.save();
+        user.totalFreeQr -= 1;
+        await user.save();
+      }
     }
     res.status(201).json({
       message: 'QR code saved successfully',
@@ -115,8 +121,8 @@ export const deleteQrs = async (req, res) => {
           if (imageDoc.logoUrl) {
             try {
               const parts = imageDoc.logoUrl.split('/');
-              const filename = parts.pop(); 
-              const folder = parts.slice(parts.indexOf('upload') + 1).join('/'); 
+              const filename = parts.pop();
+              const folder = parts.slice(parts.indexOf('upload') + 1).join('/');
               const publicId = imageDoc.logoUrl.split('/').pop().split('.')[0];
               await cloudinary.uploader.destroy(`QrLogos/${publicId}`);
             } catch (err) {
@@ -129,9 +135,9 @@ export const deleteQrs = async (req, res) => {
       await QRCodeModel.findByIdAndDelete(qrId);
       deletedQrs.push(qrId);
     }
-    res.status(200).json({ 
-      message: 'Selected QR codes deleted successfully!!', 
-      deletedQrs 
+    res.status(200).json({
+      message: 'Selected QR codes deleted successfully!!',
+      deletedQrs
     });
   } catch (error) {
     console.error('Error deleting QR codes:', error);
@@ -146,7 +152,7 @@ export const getUserQrs = async (req, res) => {
     }
     const qrs = await QRCodeModel.find({ userId })
       .populate("imageId", "image logo createdAt")
-      .sort({ createdAt: -1 }); 
+      .sort({ createdAt: -1 });
     if (!qrs || qrs.length === 0) {
       return res.status(404).json({ message: "No QR codes found for this user" });
     }
