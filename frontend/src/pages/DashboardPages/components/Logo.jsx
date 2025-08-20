@@ -2,23 +2,30 @@ import React, { useState } from 'react';
 import useColorStore from '../../../store/colorStore.js';
 import { FaPlus, FaMinus, FaImage } from 'react-icons/fa';
 import { logos } from '../../../data.js';
-const Logo = ({ setLogo, logo,setLogoCloudaniry, logoCloudaniry}) => {
+const Logo = ({ setLogo, logo, setLogoCloudaniry, logoCloudaniry }) => {
   const { isDarkMode } = useColorStore();
   const [isOpen, setIsOpen] = useState(false);
+  const handleSelectLogo = async (logoUrl) => {
+    setLogo(logoUrl);
+    try {
+      const response = await fetch(logoUrl); 
+      const blob = await response.blob();
+      const file = new File([blob], logoUrl.split('/').pop(), { type: blob.type }); 
+      setLogoCloudaniry(file);
+    } catch (error) {
+      console.error('Error fetching logo file:', error);
+      setLogoCloudaniry(null);
+    }
+  };
   return (
-    <div className='px-3 w-full flex flex-col gap-4'>
+    <div className="px-3 w-full flex flex-col gap-4">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`rounded-sm p-3 ${isDarkMode
-          ? 'bg-violet-700 hover:bg-violet-700/40'
-          : 'bg-blue-700 hover:bg-blue-700/40'
-          } flex items-center justify-between`}
+        className={`rounded-sm p-3 ${isDarkMode ? 'bg-violet-700 hover:bg-violet-700/40' : 'bg-blue-700 hover:bg-blue-700/40'} flex items-center justify-between`}
       >
         <div className="flex items-center justify-start gap-3">
-          <div
-            className={`flex items-center justify-center w-[2rem] h-[2rem] rounded-md ${isDarkMode ? 'bg-black' : 'bg-white'}`}
-          >
+          <div className={`flex items-center justify-center w-[2rem] h-[2rem] rounded-md ${isDarkMode ? 'bg-black' : 'bg-white'}`}>
             <FaImage className={`${isDarkMode ? 'text-white' : 'text-black'} text-lg`} />
           </div>
           <p className={`${isDarkMode ? 'text-white' : 'text-black'} text-lg font-josefinSans`}>
@@ -35,20 +42,20 @@ const Logo = ({ setLogo, logo,setLogoCloudaniry, logoCloudaniry}) => {
       </button>
       <div className={`overflow-hidden transition-all duration-500 ease-in ${isOpen ? 'max-h-[26.3rem] opacity-100' : 'max-h-0 opacity-0'}`}>
         <div className="flex flex-col items-start justify-start gap-4 px-2 py-2">
-          <div className='flex flex-row items-start gap-3 justify-start'>
+          <div className="flex flex-row items-start gap-3 justify-start">
             <div className={`w-[9rem] h-[9rem] ${isDarkMode ? 'bg-white text-black' : 'bg-black text-white'} rounded-lg flex items-center justify-center relative`}>
               {!logo && (
                 <div className={`flex items-center justify-center text-center w-[8.3rem] h-[8.3rem] p-3 border-2 border-dotted ${isDarkMode ? 'border-black/40' : 'border-white/40'}`}>
-                  <p className='text-sm'>No Logo Image</p>
+                  <p className="text-sm">No Logo Image</p>
                 </div>
               )}
               {logo && (
-                <div className='absolute w-[8.3rem] h-[8.3rem] p-3'>
-                  <img src={logo} alt="Uploaded Logo" className='w-full h-full object-contain' />
+                <div className="absolute w-[8.3rem] h-[8.3rem] p-3">
+                  <img src={logo} alt="Uploaded Logo" className="w-full h-full object-contain" />
                 </div>
               )}
             </div>
-            <div className='flex flex-col items-start justify-start gap-3'>
+            <div className="flex flex-col items-start justify-start gap-3">
               <input
                 type="file"
                 accept="image/*"
@@ -56,9 +63,9 @@ const Logo = ({ setLogo, logo,setLogoCloudaniry, logoCloudaniry}) => {
                 id="upload-logo"
                 onChange={(e) => {
                   const file = e.target.files[0];
-                  if (file){
-                     setLogoCloudaniry(file);
-                     setLogo(URL.createObjectURL(file));
+                  if (file) {
+                    setLogoCloudaniry(file); 
+                    setLogo(URL.createObjectURL(file)); 
                   }
                 }}
               />
@@ -67,8 +74,8 @@ const Logo = ({ setLogo, logo,setLogoCloudaniry, logoCloudaniry}) => {
               </label>
               {logo && (
                 <button
-                  type='button'
-                  onClick={() =>{ 
+                  type="button"
+                  onClick={() => {
                     setLogo(null);
                     setLogoCloudaniry(null);
                   }}
@@ -79,16 +86,13 @@ const Logo = ({ setLogo, logo,setLogoCloudaniry, logoCloudaniry}) => {
               )}
             </div>
           </div>
-          <div className='grid lg:grid-cols-6 md:grid-cols-3 grid-cols-2 gap-3'>
+          <div className="grid lg:grid-cols-6 md:grid-cols-3 grid-cols-2 gap-3">
             {logos.map((logoItem) => (
               <button
-                type='button'
+                type="button"
                 key={logoItem.id}
                 className={`${isDarkMode ? 'bg-yellow-700 hover:bg-yellow-900' : 'bg-slate-700 hover:bg-slate-900'} w-[3.3rem] h-[3.3rem] flex items-center justify-center rounded-lg`}
-                onClick={() =>{ 
-                  setLogo(logoItem.src);
-                  setLogoCloudaniry(logoItem.src);
-                }}
+                onClick={() => handleSelectLogo(logoItem.src)}
               >
                 <img src={logoItem.src} alt={logoItem.alt} className="w-10 h-10 object-contain" />
               </button>

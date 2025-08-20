@@ -31,8 +31,9 @@ export const saveQr = async (req, res) => {
         image: logoUrl,
         imageOptions: {
           crossOrigin: 'anonymous',
-          margin: 5,
-          imageSize: 0.2 
+          margin: 0,              
+          imageSize: 0.3,       
+          hideBackgroundDots: true,  
         },
       };
     }
