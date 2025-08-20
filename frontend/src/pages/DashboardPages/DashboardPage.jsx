@@ -11,7 +11,7 @@ import useAuthStore from '../../store/authStore.js';
 import useQrStore from '../../store/qrStore.js';
 const DashboardPage = () => {
     const {user} = useAuthStore();
-    const {totalQr,getQRS,qrs} = useQrStore();
+    const {totalQr,getQRS} = useQrStore();
     const [loadingPage, setLoadingPage] = useState(false);
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -34,7 +34,7 @@ const DashboardPage = () => {
     ];
     useEffect(()=>{
         getQRS(user._id);
-    },[totalQr,qrs,user?._d]);
+    },[totalQr,user?._d]);
     return (
         <div className='p-3'>
             {

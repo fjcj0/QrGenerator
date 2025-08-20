@@ -15,11 +15,12 @@ const QrCodesPage = () => {
     }, []);
     useEffect(() => {
         if (user?._id) getQRS(user._id);
-    }, [user?._id,totalQr,qrs]);
+    }, [user?._id,totalQr]);
     const { isDarkMode } = useColorStore();
     const filteredQRS = qrs?.filter(qr =>
         qr.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
+    console.log(qrs);
     return (
         <div className='p-3'>
             {!loadingPage ? (

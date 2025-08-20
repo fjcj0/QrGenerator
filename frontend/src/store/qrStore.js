@@ -8,7 +8,7 @@ const useQrStore = create((set,get) => ({
     error: null,
     isLoadingButton: false,
     totalQr: 0,
-    saveQr: async (logo, userId, name, config, qrId) => {
+    saveQr: async (logo, userId, name, config, qrId,url) => {
         set({ error: null, isLoadingButton: true });
         try {
             if (!name || !config) {
@@ -21,6 +21,7 @@ const useQrStore = create((set,get) => ({
             formData.append("userId", userId);
             if (logo) formData.append("logo", logo);
             if (qrId) formData.append("qrId", qrId);
+            formData.append("url",url);
             const response = await axios.post(
                 `${VITE_API_USER_URL}/save`,
                 formData,

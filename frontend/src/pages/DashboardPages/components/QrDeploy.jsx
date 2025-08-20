@@ -122,7 +122,6 @@ const QrDeploy = () => {
         width: 300,
         height: 300,
         type: extension,
-        data: url,
         margin: 10,
         qrOptions: { errorCorrectionLevel: level || 'M' },
         dotsOptions: {
@@ -154,7 +153,7 @@ const QrDeploy = () => {
                 navigate('/login');
                 return;
              }
-             await saveQr(logoCloudaniry,user?._id,name,qrConfig,null);
+             await saveQr(logoCloudaniry,user?._id,name,qrConfig,null,url);
             const fileName = name.trim() ? name.trim().replace(/\s+/g, '_') : 'qr-code';
             qrCode.current.download({ name: fileName, extension: extension });
             toast.success('QR has been saved successfully!!');

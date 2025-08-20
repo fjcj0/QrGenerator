@@ -6,14 +6,17 @@ import { QRImages } from '../models/image.model.js';
 import { QRCode as QRCodeModel } from '../models/qr.model.js';
 import cloudinary from '../utils/cloudinary.js';
 import { User } from '../models/user.model.js';
+import { Scanner } from '../models/scanner.model.js';
 export const saveQr = async (req, res) => {
   try {
-    const { userId, name, config: configBody, qrId } = req.body;
+    const { userId, name, config: configBody, qrId, url } = req.body;
     const logoFile = req.file;
     if (!configBody || !name) {
       return res.status(400).json({ message: 'Name and config are required' });
     }
     let config = typeof configBody === 'string' ? JSON.parse(configBody) : configBody;
+    const tokenURL = crypto.randomBytes(8).toString('hex');
+    const unrealDestination = `localhost:8080/api/qr/scan/${tokenURL}`;
     let logoUrl = null;
     if (logoFile) {
       const uploadResult = await new Promise((resolve, reject) => {
@@ -29,6 +32,7 @@ export const saveQr = async (req, res) => {
       logoUrl = uploadResult.secure_url;
       config = {
         ...config,
+        data: unrealDestination,
         image: logoUrl,
         imageOptions: {
           crossOrigin: 'anonymous',
@@ -71,6 +75,13 @@ export const saveQr = async (req, res) => {
         });
       }
       qrDocument.name = name;
+      qrDocument.token = tokenURL;
+      if (url && url !== qrDocument.url) {
+        config.data = unrealDestination;
+        qrDocument.url = url;
+      } else {
+        config.data = qrDocument.config.data;
+      }
       qrDocument.config = config;
       qrDocument.imageId = imageDoc._id;
       await qrDocument.save();
@@ -87,6 +98,8 @@ export const saveQr = async (req, res) => {
           name,
           config,
           imageId: imageDoc._id,
+          token: tokenURL,
+          url,
         });
         await qrDocument.save();
         user.totalFreeQr -= 1;
@@ -101,6 +114,25 @@ export const saveQr = async (req, res) => {
   } catch (error) {
     console.error('Error saving QR code:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+export const scanQr = async (req, res) => {
+  try {
+    const { tokenURL } = req.params;
+    const qr = await QRCodeModel.findOne({ token: tokenURL });
+    if (!qr) return res.status(404).json({ message: "QR not found" });
+    await Scanner.findOneAndUpdate(
+      { qrId: qr._id },
+      { 
+        $inc: { scanCount: 1 }, 
+        $set: { userAgent: req.headers["user-agent"], ipAddress: req.ip } 
+      },
+      { new: true, upsert: true }
+    );
+    return res.redirect(qr.url);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error scanning QR" });
   }
 };
 export const deleteQrs = async (req, res) => {
@@ -151,8 +183,9 @@ export const getUserQrs = async (req, res) => {
       return res.status(400).json({ message: "userId is required" });
     }
     const qrs = await QRCodeModel.find({ userId })
-      .populate("imageId", "image logo createdAt")
+      .populate("imageId", "image logoUrl createdAt") 
       .sort({ createdAt: -1 });
+
     if (!qrs || qrs.length === 0) {
       return res.status(404).json({ message: "No QR codes found for this user" });
     }
