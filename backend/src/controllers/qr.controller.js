@@ -12,8 +12,8 @@ export const saveQr = async (req, res) => {
   try {
     const { userId, name, config: configBody, qrId, url } = req.body;
     const logoFile = req.file;
-    if (!configBody || !name) {
-      return res.status(400).json({ message: 'Name and config are required' });
+    if (!configBody || !name || !userId) {
+      return res.status(400).json({ message: 'Name, Config and userId are required!!' });
     }
     dotenv.config({ quiet: true });
     const BASE_URL = process.env.MODE === "development" ? "http://localhost:8080" : "";
@@ -52,20 +52,19 @@ export const saveQr = async (req, res) => {
     const isDarkBg = ['#000', '#000000', 'black'].includes(bgColor.toLowerCase());
     config.dotsOptions = config.dotsOptions || {};
     config.dotsOptions.color = config.dotsOptions.color || (isDarkBg ? '#FFFFFF' : '#000000');
-    
-    const qrCode = new QRCodeCanvas(config);
-    const fileType = (config?.type || 'png').toLowerCase();
-    const uploadDir = path.join(process.cwd(), 'src/uploads/qrs');
-    fs.mkdirSync(uploadDir, { recursive: true });
-    const uniqueSuffix = Date.now() + '-' + crypto.randomBytes(4).toString('hex');
-    const fileName = `${name}-${uniqueSuffix}.${fileType}`;
-    const filePath = path.join(uploadDir, fileName);
-    await qrCode.toFile(filePath, fileType);
     let qrDocument;
     let imageDoc;
     if (qrId) {
       qrDocument = await QRCodeModel.findById(qrId);
       if (!qrDocument) return res.status(404).json({ message: 'QR not found' });
+      const qrCode = new QRCodeCanvas(config);
+      const fileType = (config?.type || 'png').toLowerCase();
+      const uploadDir = path.join(process.cwd(), 'src/uploads/qrs');
+      fs.mkdirSync(uploadDir, { recursive: true });
+      const uniqueSuffix = Date.now() + '-' + crypto.randomBytes(4).toString('hex');
+      const fileName = `${name}-${uniqueSuffix}.${fileType}`;
+      const filePath = path.join(uploadDir, fileName);
+      await qrCode.toFile(filePath, fileType);
       if (qrDocument.imageId) {
         const oldImage = await QRImages.findById(qrDocument.imageId);
         if (oldImage) {
@@ -96,26 +95,36 @@ export const saveQr = async (req, res) => {
       qrDocument.config = config;
       qrDocument.imageId = imageDoc._id;
       await qrDocument.save();
-    } else {
+    }
+    else {
       const user = await User.findById(userId);
-      if (user && user.totalFreeQr > 0) {
-        imageDoc = await QRImages.create({
-          userId,
-          image: `/uploads/qrs/${fileName}`,
-          logoUrl: logoUrl,
-        });
-        qrDocument = new QRCodeModel({
-          userId,
-          name,
-          config,
-          imageId: imageDoc._id,
-          token: tokenURL,
-          url,
-        });
-        await qrDocument.save();
-        user.totalFreeQr -= 1;
-        await user.save();
+      if (!user || user.totalFreeQr <= 0) {
+        return res.status(400).json({ message: 'you dont have enough money!!' });
       }
+      const qrCode = new QRCodeCanvas(config);
+      const fileType = (config?.type || 'png').toLowerCase();
+      const uploadDir = path.join(process.cwd(), 'src/uploads/qrs');
+      fs.mkdirSync(uploadDir, { recursive: true });
+      const uniqueSuffix = Date.now() + '-' + crypto.randomBytes(4).toString('hex');
+      const fileName = `${name}-${uniqueSuffix}.${fileType}`;
+      const filePath = path.join(uploadDir, fileName);
+      await qrCode.toFile(filePath, fileType);
+      imageDoc = await QRImages.create({
+        userId,
+        image: `/uploads/qrs/${fileName}`,
+        logoUrl: logoUrl,
+      });
+      qrDocument = new QRCodeModel({
+        userId,
+        name,
+        config,
+        imageId: imageDoc._id,
+        token: tokenURL,
+        url,
+      });
+      await qrDocument.save();
+      user.totalFreeQr -= 1;
+      await user.save();
     }
     res.status(201).json({
       message: 'QR code saved successfully',
@@ -231,5 +240,73 @@ export const getUserQrScans = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+export const getTop10UserQrs = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    if (!userId) {
+      return res.status(400).json({ message: 'Invalid userId' });
+    }
+    const userQrs = await QRCodeModel.find({ userId }).select('_id name token');
+    if (!userQrs.length) {
+      return res.json([]);
+    }
+    const qrIds = userQrs.map(qr => qr._id);
+    const scans = await Scanner.find({ qrId: { $in: qrIds } });
+    const result = userQrs.map(qr => {
+      const qrScans = scans.filter(scan => scan.qrId.toString() === qr._id.toString());
+      const totalScans = qrScans.reduce((sum, scan) => sum + (scan.scanCount || 0), 0);
+      return {
+        qrId: qr._id,
+        name: qr.name,
+        token: qr.token,
+        totalScans,
+      };
+    });
+    const top10 = result.sort((a, b) => b.totalScans - a.totalScans).slice(0, 10);
+    return res.json(top10);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+export const getLastWeekStats = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    if (!userId) {
+      return res.status(400).json({ message: 'User ID is required' });
+    }
+    const today = new Date();
+    const lastWeekStart = new Date(today);
+    lastWeekStart.setDate(today.getDate() - 7);
+    lastWeekStart.setHours(0, 0, 0, 0);
+    const lastWeekEnd = new Date(today);
+    lastWeekEnd.setDate(today.getDate() - 1);
+    lastWeekEnd.setHours(23, 59, 59, 999);
+    const totalQrCreated = await QRCodeModel.countDocuments({
+      userId,
+      createdAt: { $gte: lastWeekStart, $lte: lastWeekEnd }
+    });
+    const userQrIds = await QRCodeModel.find({ userId }).distinct('_id');
+    const totalScansData = await Scanner.aggregate([
+      { $match: { qrId: { $in: userQrIds }, scannedAt: { $gte: lastWeekStart, $lte: lastWeekEnd } } },
+      { $group: { _id: null, totalScans: { $sum: '$scanCount' } } }
+    ]);
+
+    const totalScans = totalScansData[0]?.totalScans || 0;
+    const totalMoneyLost = totalScans * 0.5;
+    const weeklyStat = await WeeklyStats.create({
+      userId,
+      weekStart: lastWeekStart,
+      weekEnd: lastWeekEnd,
+      totalQrCreated,
+      totalScans,
+      totalMoneyLost
+    });
+    res.status(200).json({ message: 'Last week stats', data: weeklyStat });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 };

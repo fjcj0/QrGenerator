@@ -21,14 +21,13 @@ const DashboardPage = () => {
         }, 1000);
         return () => clearTimeout(timer);
     }, []);
-    console.log(userQrsScans);
     const { isDarkMode } = useColorState();
     useEffect(() => {
         getQRS(user?._id);
-    }, [totalQr, user?._d]);
+    }, [totalQr, user?._id,getQRS]);
     useEffect(() => {
         getQrsUserScans(user?._id);
-    }, []);
+    }, [totalQr, user?._id,getQrsUserScans]);
     return (
         <div className='p-3'>
             {
@@ -71,23 +70,25 @@ const DashboardPage = () => {
                         <div className='grid grid-cols-1 lg:grid-cols-3 gap-5 my-10'>
                             <div className={`lg:col-span-2 ${isDarkMode ? 'bg-black' : 'bg-white'} rounded-xl`}>
                                 <div className='flex flex-col p-5 gap-3 w-full h-full'>
+                                    {/* 
                                     <div className='flex flex-col gap-1'>
                                         <h1 className={`text-md font-poppins font-bold ${isDarkMode ? 'text-white' : 'text-black'}`}>Total Growth</h1>
                                         <p className={`text-sm font-poppins  ${isDarkMode ? 'text-white/50' : 'text-black/50'}`}>$2,324.00</p>
                                     </div>
-                                    <div className='h-full '>
-                                        <ScannerStatsChart />
+                                    */}
+                                    <div className='h-full flex items-center justify-center'>
+                                        <ScannerStatsChart userId={user?._id}/>
                                     </div>
                                 </div>
                             </div>
-                            <div className={`${isDarkMode ? 'bg-black' : 'bg-white'} rounded-xl h-[600px] overflow-y-auto`}>
+                            <div className={`${isDarkMode ? 'bg-black' : 'bg-white'} rounded-xl h-[600px] overflow-y-auto p-3`}>
                                 <div className='p-4'>
                                     <div className='flex items-center justify-between'>
                                         <h1 className={`${isDarkMode ? 'text-white' : 'text-black'} text-xl font-bold font-josefinSans`}>Last Ten Scanners</h1>
                                         <FaQrcode className={`${isDarkMode ? 'text-white' : 'text-black'} text-xl font-bold font-josefinSans`} />
                                     </div>
                                     <div>
-                                        <ScannerChartCard />
+                                        <ScannerChartCard  userId={user?._id}/>
                                     </div>
                                     <div className='flex flex-col gap-4'>
                                         {userQrsScans && userQrsScans.map((scanner) => (

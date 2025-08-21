@@ -3,12 +3,14 @@ import axios from 'axios';
 axios.defaults.withCredentials = true;
 const VITE_API_USER_URL = import.meta.env.MODE === "development" ? "http://localhost:8080/api/qr" : "/api/qr";
 export const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:8080" : "";
-const useQrStore = create((set,get) => ({
+const useQrStore = create((set, get) => ({
     qrs: null,
     error: null,
     isLoadingButton: false,
     totalQr: 0,
-    saveQr: async (logo, userId, name, config, qrId,url) => {
+    weeklyStats:null,
+    top10Scans:null,
+    saveQr: async (logo, userId, name, config, qrId, url) => {
         set({ error: null, isLoadingButton: true });
         try {
             if (!name || !config) {
@@ -21,7 +23,7 @@ const useQrStore = create((set,get) => ({
             formData.append("userId", userId);
             if (logo) formData.append("logo", logo);
             if (qrId) formData.append("qrId", qrId);
-            formData.append("url",url);
+            formData.append("url", url);
             const response = await axios.post(
                 `${VITE_API_USER_URL}/save`,
                 formData,
@@ -30,15 +32,18 @@ const useQrStore = create((set,get) => ({
             const savedQR = response.data.qr;
             const currentQrs = get().qrs || [];
             const updatedQrs = qrId
-                ? currentQrs.map(qr => qr._id === qrId ? savedQR : qr) 
-                : [savedQR, ...currentQrs]; 
+                ? currentQrs.map(qr => qr._id === qrId ? savedQR : qr)
+                : [savedQR, ...currentQrs];
+            if(!qrId){
+                set({
+                    totalQr: get().totalQr + 1
+                });
+            }
             set({
                 qrs: updatedQrs,
-                totalQr: updatedQrs.length,
                 isLoadingButton: false,
                 error: null
             });
-            return;
         } catch (error) {
             set({
                 error: error.response?.data?.message || error.message,
@@ -46,37 +51,56 @@ const useQrStore = create((set,get) => ({
             });
             throw new Error(error.response?.data?.message || error.message);
         }
-    },    
+    },
     deleteQRS: async (qrsToDelete) => {
-        set({error:null,isLoadingButton:true});
-        try{
-            await axios.delete(
-                `${VITE_API_USER_URL}/delete?qrIds=${qrsToDelete.join(",")}`
-            );              
-            set({ isLoadingButton: false });
-        }catch(error){
-            set({
-                error: error.response?.data?.message || error.message,
-                isLoadingButton: false,
-            });
-            throw new Error(error.response?.data?.message || error.message);
+        set({ isLoadingButton: true, error: null });
+        try {
+            await axios.delete(`${VITE_API_USER_URL}/delete?qrIds=${qrsToDelete.join(",")}`);
+            const updatedQrs = (get().qrs || []).filter(qr => !qrsToDelete.includes(qr._id));
+            set({ qrs: updatedQrs, totalQr: updatedQrs.length, isLoadingButton: false });
+        } catch (error) {
+            set({ error: error.message, isLoadingButton: false });
         }
-    },getQRS: async (userId) => {
+    }
+    , getQRS: async (userId) => {
         set({ error: null });
         try {
             const response = await axios.get(`${VITE_API_USER_URL}/user/${userId}`);
             const qrs = response?.data?.qrs || [];
-            set({ 
-                qrs, 
-                totalQr: qrs.length 
+            set({
+                qrs,
+                totalQr: qrs.length
             });
         } catch (error) {
             if (error.response?.status === 404) {
-                set({ qrs: [] , totalQr: 0});
+                set({ qrs: [], totalQr: 0 });
             } else {
                 set({ error: error.response?.data?.message || error.message });
             }
         }
     },
+    getTop10UserQrs: async(userId) => {
+        set({ error: null });
+        try {
+            const response = await axios.get(`${VITE_API_USER_URL}/TopScans/${userId}`);
+            set({ top10Scans: response?.data });
+        } catch (error) {
+            set({ error: error.response?.data?.message || error.message });
+            throw new Error(error.response?.data?.message || error.message);
+        }
+    },    
+    getWeeklyStats : async(userId) =>{
+        set({error:null});
+        try{
+            const response = await axios.get(`${VITE_API_USER_URL}/weeklyStats/${userId}`);
+            set({weeklyStats:response?.data});
+        }
+        catch(error){
+            set({
+                error: error.response?.data?.message || error.message,
+            });
+            throw new Error(error.response?.data?.message || error.message);
+        }
+    }
 }));
 export default useQrStore;

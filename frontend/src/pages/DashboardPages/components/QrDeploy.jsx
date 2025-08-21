@@ -153,7 +153,11 @@ const QrDeploy = () => {
                 navigate('/login');
                 return;
              }
-             await saveQr(logoCloudaniry,user?._id,name,qrConfig,null,url);
+             if(user?.totalQr == 0){
+                toast.error('You dont have enough money!!');
+                return;
+             }
+            await saveQr(logoCloudaniry,user?._id,name,qrConfig,null,url);
             const fileName = name.trim() ? name.trim().replace(/\s+/g, '_') : 'qr-code';
             qrCode.current.download({ name: fileName, extension: extension });
             toast.success('QR has been saved successfully!!');

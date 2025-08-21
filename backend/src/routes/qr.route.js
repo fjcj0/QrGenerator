@@ -1,7 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import { verifyToken } from '../middleware/verifyToken.js';
-import { saveQr, deleteQrs, getUserQrs, scanQr, getUserQrScans } from '../controllers/qr.controller.js';
+import { saveQr, deleteQrs, getUserQrs, scanQr, getUserQrScans, getTop10UserQrs, getLastWeekStats } from '../controllers/qr.controller.js';
 const router = express.Router();
 const storage = multer.memoryStorage(); 
 const upload = multer({ storage });
@@ -10,4 +10,6 @@ router.delete('/delete', verifyToken, deleteQrs);
 router.get('/user/:userId', verifyToken, getUserQrs);
 router.get('/scan/:tokenURL',scanQr);
 router.get('/QrUserScan/:userId',verifyToken,getUserQrScans);
+router.get('/TopScans/:userId',verifyToken,getTop10UserQrs);
+router.get('/weeklyStats/:userId',verifyToken,getLastWeekStats);
 export default router;
