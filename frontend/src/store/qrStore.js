@@ -10,6 +10,7 @@ const useQrStore = create((set, get) => ({
     isLoadingButton: false,
     totalQr: 0,
     top10Scans:null,
+    loading:false,
     lastWeekQrStats: null,
     saveQr: async (logo, userId, name, config, qrId, url) => {
         set({ error: null, isLoadingButton: true });
@@ -97,12 +98,12 @@ const useQrStore = create((set, get) => ({
             throw new Error(error.response?.data?.message || error.message);
         }
     },getQrById: async (qrId) => {
-        set({ error: null });
+        set({ error: null,loading:true });
         try {
             const response = await axios.get(`${VITE_API_USER_URL}/getQr/${qrId}`);
-            set({ qrData: response?.data });
+            set({ qrData: response?.data,loading:false });
         } catch (error) {
-            set({ error: error.response?.data?.message || error.message });
+            set({ error: error.response?.data?.message || error.message,loading:false });
             throw new Error(error.response?.data?.message || error.message);
         }
     }, 

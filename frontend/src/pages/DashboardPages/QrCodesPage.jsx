@@ -121,9 +121,9 @@ const QrCodesPage = () => {
                                             </td>
                                             <td className="px-6 py-4 text-center">{new Date(item.createdAt).toLocaleDateString()}</td>
                                             <td className="px-6 py-4 text-center">
-                                                <Link to={`/dashboard/edit-qr/${item._id}`} type='button' className='w-8 h-8 rounded-lg bg-yellow-500 hover:bg-yellow-800 flex items-center justify-center mx-auto'>
+                                                <a href={`/dashboard/edit-qr/${item._id}`} type='button' className='w-8 h-8 rounded-lg bg-yellow-500 hover:bg-yellow-800 flex items-center justify-center mx-auto'>
                                                     <FaEdit className={`${isDarkMode ? 'text-black' : 'text-white'}`} />
-                                                </Link>
+                                                </a>
                                             </td>
                                             <td className="px-6 py-4 text-center">
                                                 <button
