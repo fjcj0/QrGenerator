@@ -1,21 +1,3 @@
-import { createCanvas } from 'canvas';
-import { JSDOM } from 'jsdom';
-const { window } = new JSDOM(`<!DOCTYPE html><body></body>`);
-global.window = window;
-global.document = window.document;
-global.self = window;
-global.HTMLElement = window.HTMLElement;
-global.Blob = window.Blob;
-global.XMLSerializer = window.XMLSerializer;
-Object.defineProperty(global, 'navigator', {
-  value: { userAgent: 'node.js' },
-  writable: false,
-  configurable: true,
-});
-document.createElement = (tagName) => {
-  if (tagName === 'canvas') return createCanvas(1, 1);
-  return window.document.createElement(tagName);
-};
 import express from "express";
 import dotenv from "dotenv";
 import { connectDB } from "./lib/db.js";

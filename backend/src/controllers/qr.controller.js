@@ -8,6 +8,7 @@ import cloudinary from '../utils/cloudinary.js';
 import { User } from '../models/user.model.js';
 import { Scanner } from '../models/scanner.model.js';
 import dotenv from "dotenv";
+import {WeeklyStats } from '../models/weeklyStats.js';
 export const saveQr = async (req, res) => {
   try {
     const { userId, name, config: configBody, qrId, url } = req.body;
@@ -278,22 +279,37 @@ export const getLastWeekStats = async (req, res) => {
       return res.status(400).json({ message: 'User ID is required' });
     }
     const today = new Date();
-    const lastWeekStart = new Date(today);
-    lastWeekStart.setDate(today.getDate() - 7);
-    lastWeekStart.setHours(0, 0, 0, 0);
-    const lastWeekEnd = new Date(today);
-    lastWeekEnd.setDate(today.getDate() - 1);
-    lastWeekEnd.setHours(23, 59, 59, 999);
+    const lastWeekStart = new Date(Date.UTC(
+      today.getUTCFullYear(),
+      today.getUTCMonth(),
+      today.getUTCDate() - 7,
+      0, 0, 0
+    ));
+    const lastWeekEnd = new Date(Date.UTC(
+      today.getUTCFullYear(),
+      today.getUTCMonth(),
+      today.getUTCDate() - 1,
+      23, 59, 59, 999
+    ));
     const totalQrCreated = await QRCodeModel.countDocuments({
       userId,
       createdAt: { $gte: lastWeekStart, $lte: lastWeekEnd }
     });
     const userQrIds = await QRCodeModel.find({ userId }).distinct('_id');
     const totalScansData = await Scanner.aggregate([
-      { $match: { qrId: { $in: userQrIds }, scannedAt: { $gte: lastWeekStart, $lte: lastWeekEnd } } },
-      { $group: { _id: null, totalScans: { $sum: '$scanCount' } } }
+      {
+        $match: {
+          qrId: { $in: userQrIds },
+          scannedAt: { $gte: lastWeekStart, $lte: lastWeekEnd }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalScans: { $sum: '$scanCount' }
+        }
+      }
     ]);
-
     const totalScans = totalScansData[0]?.totalScans || 0;
     const totalMoneyLost = totalScans * 0.5;
     const weeklyStat = await WeeklyStats.create({
@@ -304,7 +320,7 @@ export const getLastWeekStats = async (req, res) => {
       totalScans,
       totalMoneyLost
     });
-    res.status(200).json({ message: 'Last week stats', data: weeklyStat });
+    res.status(200).json({ weeklyStats: [weeklyStat] });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error', error: err.message });

@@ -34,9 +34,8 @@ const Design = ({ setBodyShape, bodyShape, setEyeFrameShape, eyeFrameShape, setE
                     )}
                 </div>
             </button>
-            <div className={`overflow-hidden transition-all duration-500 ease-in ${isOpen ? 'max-h-[37rem] opacity-100' : 'max-h-0 opacity-0'}`}>
+            <div className={`overflow-hidden transition-all duration-500 ease-in ${isOpen ? 'max-h-[40rem] opacity-100' : 'max-h-0 opacity-0'}`}>
                 <div className="flex flex-col items-start justify-start gap-4 px-2 py-2 font-josefinSans">
-                    {/* Body Shapes */}
                     <div className='flex flex-col gap-4 items-start justify-start'>
                         <h1 className={`${isDarkMode ? 'text-white' : 'text-black'}`}>Body Shapes</h1>
                         <div className='grid md:grid-cols-5 grid-cols-2 gap-3'>
@@ -52,7 +51,6 @@ const Design = ({ setBodyShape, bodyShape, setEyeFrameShape, eyeFrameShape, setE
                             ))}
                         </div>
                     </div>
-                    {/* Eye Frames */}
                     <div className='flex flex-col gap-4 items-start justify-start'>
                         <h1 className={`${isDarkMode ? 'text-white' : 'text-black'}`}>Eye Frames</h1>
                         <div className='grid md:grid-cols-5 grid-cols-2 gap-3'>
@@ -68,7 +66,6 @@ const Design = ({ setBodyShape, bodyShape, setEyeFrameShape, eyeFrameShape, setE
                             ))}
                         </div>
                     </div>
-                    {/* Eye Balls */}
                     <div className='flex flex-col gap-4 items-start justify-start'>
                         <h1 className={`${isDarkMode ? 'text-white' : 'text-black'}`}>Eye Balls</h1>
                         <div className='grid md:grid-cols-5 grid-cols-2 gap-3'>
@@ -98,7 +95,6 @@ const Design = ({ setBodyShape, bodyShape, setEyeFrameShape, eyeFrameShape, setE
                             ))}
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

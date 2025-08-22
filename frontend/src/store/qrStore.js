@@ -89,18 +89,17 @@ const useQrStore = create((set, get) => ({
             throw new Error(error.response?.data?.message || error.message);
         }
     },    
-    getWeeklyStats : async(userId) =>{
-        set({error:null});
-        try{
+    getWeeklyStats: async (userId) => {
+        set({ error: null });
+        try {
             const response = await axios.get(`${VITE_API_USER_URL}/weeklyStats/${userId}`);
-            set({weeklyStats:response?.data});
-        }
-        catch(error){
+            set({ weeklyStats: response?.data?.weeklyStats || [] });
+        } catch (error) {
             set({
                 error: error.response?.data?.message || error.message,
             });
             throw new Error(error.response?.data?.message || error.message);
         }
-    }
+    },    
 }));
 export default useQrStore;

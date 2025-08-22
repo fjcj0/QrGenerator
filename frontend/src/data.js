@@ -9,18 +9,27 @@ import playstore from './assets/logos/playstore.png';
 import twitter from './assets/logos/twitter.png';
 import youtube from './assets/logos/youtube.png';
 import circleShape from './assets/bodyShapes/circle.svg';
+/*
 import kiteShape from './assets/bodyShapes/kite.svg';
 import smoothRoundShape from './assets/bodyShapes/smooth-round.svg';
-import smoothSharpShape from './assets/bodyShapes/smooth-sharp.svg';
+*/
+import smoothSharpShape from './assets/bodyShapes/pstyle.png';
+import pstyle from './assets/bodyShapes/pstyle6.png';
 import circleFrame from './assets/eyeFrames/circle.svg';
+/*
 import leftLeafFrame from './assets/eyeFrames/left-leaf.svg';
 import roundedFrame from './assets/eyeFrames/rounded.svg';
+*/
 import squareFrame from './assets/eyeFrames/square.svg';
 import circleBall from './assets/eyeBalls/circle.svg';
+/*
 import rightLeafBall from './assets/eyeBalls/right-leaf.svg';
+*/
 import squareBall from './assets/eyeBalls/square.svg';
+/*
 import leftDiamondBall from './assets/eyeBalls/left-diamond.svg';
 import roundedBall from './assets/eyeBalls/rounded.svg';
+*/
 export const logos = [
     { id: 1, src: appstore, alt: 'App Store' },
     { id: 2, src: facebook, alt: 'Facebook' },
@@ -33,24 +42,36 @@ export const logos = [
     { id: 9, src: twitter, alt: 'Twitter' },
     { id: 10, src: youtube, alt: 'YouTube' },
 ];
+
 export const bodyShapes = [
     { id: 1, src: circleShape, alt: 'Circle', name: 'Circle', qrType: 'dots' },
+    /*
     { id: 2, src: kiteShape, alt: 'Kite', name: 'Kite', qrType: 'classy' },
     { id: 3, src: smoothRoundShape, alt: 'Smooth Round', name: 'Smooth Round', qrType: 'extra-rounded' },
-    { id: 4, src: smoothSharpShape, alt: 'Smooth Sharp', name: 'Smooth Sharp', qrType: 'square' },
+     */
+    { id: 2, src: smoothSharpShape, alt: 'Smooth Sharp', name: 'Smooth Sharp', qrType: 'square' },
+    { id: 3, src: pstyle, alt: 'Smooth Sharp', name: 'Smooth Sharp', qrType: 'rounded' },
 ];
 export const eyeFrames = [
-    { id: 1, src: circleFrame, alt: 'Circle', name: 'Circle', qrType: 'dots' },
+    { id: 1, src: circleFrame, alt: 'Circle', name: 'Circle', qrType: 'dot' },
+    { id: 2, src: squareFrame, alt: 'Square', name: 'Square', qrType: 'square' },
+    /*
     { id: 2, src: leftLeafFrame, alt: 'Left Leaf', name: 'Leaf Left', qrType: 'classy' },
     { id: 3, src: roundedFrame, alt: 'Rounded', name: 'Rounded', qrType: 'extra-rounded' },
-    { id: 4, src: squareFrame, alt: 'Square', name: 'Square', qrType: 'square' },
+
+    { id: 5, src: circleFrame, alt: 'Circle', name: 'Circle', qrType: 'dots' },
+    */
 ];
 export const eyeBalls = [
     { id: 1, src: circleBall, alt: 'Circle', name: 'Circle', qrType: 'dot' },
+    { id: 2, src: squareBall, alt: 'Square', name: 'Square', qrType: 'square' },
+    /*
     { id: 2, src: rightLeafBall, alt: 'Right Leaf', name: 'Leaf Right', qrType: 'classy' },
-    { id: 3, src: squareBall, alt: 'Square', name: 'Square', qrType: 'square' },
+
     { id: 4, src: leftDiamondBall, alt: 'Left Diamond', name: 'Diamond Left', qrType: 'classy-rounded' },
     { id: 5, src: roundedBall, alt: 'Rounded', name: 'Rounded', qrType: 'extra-rounded' },
+    { id: 6, src: circleBall, alt: 'Circle', name: 'Circle', qrType: 'dots' },
+    */
 ];
 
 export const levels = [
