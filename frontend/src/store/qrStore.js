@@ -8,8 +8,8 @@ const useQrStore = create((set, get) => ({
     error: null,
     isLoadingButton: false,
     totalQr: 0,
-    weeklyStats:null,
     top10Scans:null,
+    lastWeekQrStats: null,
     saveQr: async (logo, userId, name, config, qrId, url) => {
         set({ error: null, isLoadingButton: true });
         try {
@@ -88,16 +88,15 @@ const useQrStore = create((set, get) => ({
             set({ error: error.response?.data?.message || error.message });
             throw new Error(error.response?.data?.message || error.message);
         }
-    },    
-    getWeeklyStats: async (userId) => {
+    },       
+    getLastWeekQrStats: async(userId) => {
         set({ error: null });
         try {
-            const response = await axios.get(`${VITE_API_USER_URL}/weeklyStats/${userId}`);
-            set({ weeklyStats: response?.data?.weeklyStats || [] });
+            const response = await axios.get(`${VITE_API_USER_URL}/last-week-stats/${userId}`);
+            set({ lastWeekQrStats: response?.data });
         } catch (error) {
-            set({
-                error: error.response?.data?.message || error.message,
-            });
+        console.log(error.message);
+            set({ error: error.response?.data?.message || error.message });
             throw new Error(error.response?.data?.message || error.message);
         }
     },    

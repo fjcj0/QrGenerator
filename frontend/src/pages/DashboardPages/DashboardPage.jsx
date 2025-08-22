@@ -3,17 +3,17 @@ import { FaDollarSign, FaQrcode, FaUsers, FaChartLine } from 'react-icons/fa';
 import CardDashboardInfo from './components/CardDashboardInfo';
 import CardDashboardOne from './components/CardDashboardOne';
 import useColorState from '../../store/colorStore.js';
-import ScannerStatsChart from '../../charts/ScannerStatsChart.jsx';
 import Scanner from './components/Scanner.jsx';
 import ScannerChartCard from '../../charts/ScannerChartData.jsx';
 import Loader from '../../tools/Loader.jsx';
 import useAuthStore from '../../store/authStore.js';
 import useQrStore from '../../store/qrStore.js';
 import useScannerStore from '../../store/scannerStore.js';
+import CustomAreaChart from '../../charts/CustomChart.jsx';
 const DashboardPage = () => {
     const { user } = useAuthStore();
     const { getQrsUserScans, userQrsScans, totalScan } = useScannerStore();
-    const { totalQr, getQRS } = useQrStore();
+    const { totalQr, getQRS,getLastWeekQrStats,lastWeekQrStats } = useQrStore();
     const [loadingPage, setLoadingPage] = useState(false);
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -28,6 +28,10 @@ const DashboardPage = () => {
     useEffect(() => {
         getQrsUserScans(user?._id);
     }, [totalQr, user?._id,getQrsUserScans]);
+    useEffect(()=>{
+        getLastWeekQrStats(user?._id);
+    },[user?._id,getLastWeekQrStats]);
+    console.log(lastWeekQrStats);
     return (
         <div className='p-3'>
             {
@@ -76,8 +80,8 @@ const DashboardPage = () => {
                                         <p className={`text-sm font-poppins  ${isDarkMode ? 'text-white/50' : 'text-black/50'}`}>$2,324.00</p>
                                     </div>
                                     */}
-                                    <div className='h-full flex items-center justify-center'>
-                                        <ScannerStatsChart userId={user?._id}/>
+                                    <div className='h-full flex w-full items-center justify-center'>
+                                             <CustomAreaChart weekData={lastWeekQrStats}/>
                                     </div>
                                 </div>
                             </div>

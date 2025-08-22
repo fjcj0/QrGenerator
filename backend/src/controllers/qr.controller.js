@@ -8,7 +8,7 @@ import cloudinary from '../utils/cloudinary.js';
 import { User } from '../models/user.model.js';
 import { Scanner } from '../models/scanner.model.js';
 import dotenv from "dotenv";
-import {WeeklyStats } from '../models/weeklyStats.js';
+import mongoose from "mongoose";
 export const saveQr = async (req, res) => {
   try {
     const { userId, name, config: configBody, qrId, url } = req.body;
@@ -272,57 +272,52 @@ export const getTop10UserQrs = async (req, res) => {
     return res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
-export const getLastWeekStats = async (req, res) => {
+export const getLastWeekQrStats = async (req, res) => {
   try {
     const { userId } = req.params;
     if (!userId) {
-      return res.status(400).json({ message: 'User ID is required' });
+      return res.status(400).json({ message: "UserId is required" });
     }
     const today = new Date();
-    const lastWeekStart = new Date(Date.UTC(
-      today.getUTCFullYear(),
-      today.getUTCMonth(),
-      today.getUTCDate() - 7,
-      0, 0, 0
-    ));
-    const lastWeekEnd = new Date(Date.UTC(
-      today.getUTCFullYear(),
-      today.getUTCMonth(),
-      today.getUTCDate() - 1,
-      23, 59, 59, 999
-    ));
-    const totalQrCreated = await QRCodeModel.countDocuments({
-      userId,
-      createdAt: { $gte: lastWeekStart, $lte: lastWeekEnd }
-    });
-    const userQrIds = await QRCodeModel.find({ userId }).distinct('_id');
-    const totalScansData = await Scanner.aggregate([
+    const lastWeek = new Date();
+    lastWeek.setDate(today.getDate() - 6); 
+    const stats = await QRCodeModel.aggregate([
       {
         $match: {
-          qrId: { $in: userQrIds },
-          scannedAt: { $gte: lastWeekStart, $lte: lastWeekEnd }
-        }
+          userId: new mongoose.Types.ObjectId(userId),
+          createdAt: { $gte: lastWeek, $lte: today },
+        },
       },
       {
         $group: {
-          _id: null,
-          totalScans: { $sum: '$scanCount' }
-        }
-      }
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" },
+            day: { $dayOfMonth: "$createdAt" },
+          },
+          total: { $sum: 1 },
+        },
+      },
+      { $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 } },
     ]);
-    const totalScans = totalScansData[0]?.totalScans || 0;
-    const totalMoneyLost = totalScans * 0.5;
-    const weeklyStat = await WeeklyStats.create({
-      userId,
-      weekStart: lastWeekStart,
-      weekEnd: lastWeekEnd,
-      totalQrCreated,
-      totalScans,
-      totalMoneyLost
-    });
-    res.status(200).json({ weeklyStats: [weeklyStat] });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error', error: err.message });
+    const result = [];
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(lastWeek);
+      date.setDate(lastWeek.getDate() + i);
+      const found = stats.find(
+        (s) =>
+          s._id.year === date.getFullYear() &&
+          s._id.month === date.getMonth() + 1 &&
+          s._id.day === date.getDate()
+      );
+      result.push({
+        date: date.toLocaleDateString("en-US", { weekday: "short" }),
+        value: found ? found.total : 0,
+      });
+    }
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error fetching QR stats" });
   }
 };
