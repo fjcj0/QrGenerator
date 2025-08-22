@@ -16,6 +16,7 @@ import AuthLayout from './layouts/AuthLayout';
 import { Toaster } from 'react-hot-toast';
 import useAuthStore from './store/authStore';
 import Loader from './tools/Loader';
+import EditQrPage from './pages/DashboardPages/EditQrPage';
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuthStore();
   if (!user) return children;
@@ -55,6 +56,10 @@ const App = () => {
           <Route path='/dashboard/create-qr' element={
             <ProtectedRoute>
               <CreateQrPage />
+            </ProtectedRoute>} />
+            <Route path='/dashboard/edit-qr/:qrId' element={
+            <ProtectedRoute>
+              <EditQrPage/>
             </ProtectedRoute>} />
         </Route>
         {/**/}

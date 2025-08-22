@@ -74,12 +74,9 @@ const DashboardPage = () => {
                         <div className='grid grid-cols-1 lg:grid-cols-3 gap-5 my-10'>
                             <div className={`lg:col-span-2 ${isDarkMode ? 'bg-black' : 'bg-white'} rounded-xl`}>
                                 <div className='flex flex-col p-5 gap-3 w-full h-full'>
-                                    {/* 
                                     <div className='flex flex-col gap-1'>
-                                        <h1 className={`text-md font-poppins font-bold ${isDarkMode ? 'text-white' : 'text-black'}`}>Total Growth</h1>
-                                        <p className={`text-sm font-poppins  ${isDarkMode ? 'text-white/50' : 'text-black/50'}`}>$2,324.00</p>
+                                        <h1 className={`text-md font-poppins font-bold ${isDarkMode ? 'text-white' : 'text-black'}`}>Total Qr Created Last Week</h1>
                                     </div>
-                                    */}
                                     <div className='h-full flex w-full items-center justify-center'>
                                              <CustomAreaChart weekData={lastWeekQrStats}/>
                                     </div>

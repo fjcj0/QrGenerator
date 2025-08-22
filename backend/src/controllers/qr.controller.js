@@ -321,3 +321,19 @@ export const getLastWeekQrStats = async (req, res) => {
     res.status(500).json({ message: "Error fetching QR stats" });
   }
 };
+export const getQrById = async (req, res) => {
+  try {
+    const { qrId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(qrId)) {
+      return res.status(400).json({ message: 'Invalid QR ID' });
+    }
+    const qr = await QRCodeModel.findById(qrId);
+    if (!qr) {
+      return res.status(404).json({ message: 'QR code not found' });
+    }
+    res.status(200).json(qr);
+  } catch (error) {
+    console.error('Error fetching QR code:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};

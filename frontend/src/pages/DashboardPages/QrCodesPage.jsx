@@ -6,6 +6,7 @@ import useQrStore, { BASE_URL } from '../../store/qrStore.js';
 import useAuthStore from '../../store/authStore.js';
 import Pagination from './components/Pagination.jsx';
 import {toast} from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 const QrCodesPage = () => {
     const [loadingIds, setLoadingIds] = useState([]);
     const [bulkLoading, setBulkLoading] = useState(false);
@@ -78,7 +79,7 @@ const QrCodesPage = () => {
                                 setCurrentPage(1);
                             }}
                         />
-                        <div className="relative overflow-x-auto overflow-y-auto shadow-md sm:rounded-lg h-[100%] font-josefinSans">
+                        <div className="relative overflow-x-auto overflow-y-auto sm:rounded-lg h-[100%] font-josefinSans">
                             <table className="min-w-[700px] w-full text-sm text-left table-fixed">
                                 <thead className={`text-xs ${isDarkMode ? 'bg-white text-black' : 'bg-black text-white'}`}>
                                     <tr>
@@ -120,9 +121,9 @@ const QrCodesPage = () => {
                                             </td>
                                             <td className="px-6 py-4 text-center">{new Date(item.createdAt).toLocaleDateString()}</td>
                                             <td className="px-6 py-4 text-center">
-                                                <button type='button' className='w-8 h-8 rounded-lg bg-yellow-500 hover:bg-yellow-800 flex items-center justify-center mx-auto'>
+                                                <Link to={`/dashboard/edit-qr/${item._id}`} type='button' className='w-8 h-8 rounded-lg bg-yellow-500 hover:bg-yellow-800 flex items-center justify-center mx-auto'>
                                                     <FaEdit className={`${isDarkMode ? 'text-black' : 'text-white'}`} />
-                                                </button>
+                                                </Link>
                                             </td>
                                             <td className="px-6 py-4 text-center">
                                                 <button

@@ -4,6 +4,7 @@ axios.defaults.withCredentials = true;
 const VITE_API_USER_URL = import.meta.env.MODE === "development" ? "http://localhost:8080/api/qr" : "/api/qr";
 export const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:8080" : "";
 const useQrStore = create((set, get) => ({
+    qrData:null,
     qrs: null,
     error: null,
     isLoadingButton: false,
@@ -51,8 +52,7 @@ const useQrStore = create((set, get) => ({
             });
             throw new Error(error.response?.data?.message || error.message);
         }
-    },
-    deleteQRS: async (qrsToDelete) => {
+    },deleteQRS: async (qrsToDelete) => {
         set({ isLoadingButton: true, error: null });
         try {
             await axios.delete(`${VITE_API_USER_URL}/delete?qrIds=${qrsToDelete.join(",")}`);
@@ -61,8 +61,7 @@ const useQrStore = create((set, get) => ({
         } catch (error) {
             set({ error: error.message, isLoadingButton: false });
         }
-    }
-    , getQRS: async (userId) => {
+    },getQRS: async (userId) => {
         set({ error: null });
         try {
             const response = await axios.get(`${VITE_API_USER_URL}/user/${userId}`);
@@ -78,8 +77,7 @@ const useQrStore = create((set, get) => ({
                 set({ error: error.response?.data?.message || error.message });
             }
         }
-    },
-    getTop10UserQrs: async(userId) => {
+    },getTop10UserQrs: async(userId) => {
         set({ error: null });
         try {
             const response = await axios.get(`${VITE_API_USER_URL}/TopScans/${userId}`);
@@ -88,8 +86,7 @@ const useQrStore = create((set, get) => ({
             set({ error: error.response?.data?.message || error.message });
             throw new Error(error.response?.data?.message || error.message);
         }
-    },       
-    getLastWeekQrStats: async(userId) => {
+    },getLastWeekQrStats: async(userId) => {
         set({ error: null });
         try {
             const response = await axios.get(`${VITE_API_USER_URL}/last-week-stats/${userId}`);
@@ -99,6 +96,15 @@ const useQrStore = create((set, get) => ({
             set({ error: error.response?.data?.message || error.message });
             throw new Error(error.response?.data?.message || error.message);
         }
-    },    
+    },getQrById: async (qrId) => {
+        set({ error: null });
+        try {
+            const response = await axios.get(`${VITE_API_USER_URL}/getQr/${qrId}`);
+            set({ qrData: response?.data });
+        } catch (error) {
+            set({ error: error.response?.data?.message || error.message });
+            throw new Error(error.response?.data?.message || error.message);
+        }
+    }, 
 }));
 export default useQrStore;
