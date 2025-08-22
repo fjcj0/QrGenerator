@@ -22,7 +22,7 @@ QrGenerator is a modern web application built with the **MERN stack** (MongoDB, 
 - **Frontend:** React, Tailwind CSS, Axios  
 - **Backend:** Node.js, Express.js  
 - **Database:** MongoDB (using Mongoose)  
-- **Other Libraries:** `qrcode` or similar for QR generation  
+- **Other Libraries:** `qr-code-styling` or similar for QR generation  
 
 ---
 
