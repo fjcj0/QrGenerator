@@ -99,9 +99,10 @@ export const verifyEmail = async (request, response) => {
         user.verificationTokenExpiresAt = undefined;
         user.verificationToken = undefined;
         await user.save();
-        sendWelcomeEmail(user.email, user.name);
+        const fullName = user.firstName + user.lastName;
+        sendWelcomeEmail(user.email, fullName);
         response.status(200).json({
-            success: true, message: `Welcome ${user.name}!!`,
+            success: true, message: `Welcome ${fullName}!!`,
             user: {
                 ...user._doc,
                 password: undefined,
