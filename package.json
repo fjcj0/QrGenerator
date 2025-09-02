@@ -2,10 +2,10 @@
   "name": "qrgenerator",
   "version": "1.0.0",
   "description": "QrGenerator is a modern web application built with the **MERN stack** (MongoDB, Express.js, React, Node.js) that allows users to generate customized QR codes with different shapes, colors, and styles. It provides an intuitive interface and a powerful backend API for managing QR code generation and storage.",
-  "main": "backend/src/index.js",
+  "main": "index.js",
   "scripts": {
-    "start": "npm run start --prefix backend",
-    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend"
+    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
+    "start": "npm run start --prefix backend"
   },
   "keywords": [],
   "author": "",
