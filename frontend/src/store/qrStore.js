@@ -2,15 +2,15 @@ import { create } from "zustand";
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 const VITE_API_USER_URL = import.meta.env.MODE === "development" ? "http://localhost:8080/api/qr" : "/api/qr";
-export const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:8080" : "";
+export const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:8080" : "https://qrgenerator-ctx0.onrender.com";
 const useQrStore = create((set, get) => ({
-    qrData:null,
+    qrData: null,
     qrs: null,
     error: null,
     isLoadingButton: false,
     totalQr: 0,
-    top10Scans:null,
-    loading:false,
+    top10Scans: null,
+    loading: false,
     lastWeekQrStats: null,
     saveQr: async (logo, userId, name, config, qrId, url) => {
         set({ error: null, isLoadingButton: true });
@@ -36,7 +36,7 @@ const useQrStore = create((set, get) => ({
             const updatedQrs = qrId
                 ? currentQrs.map(qr => qr._id === qrId ? savedQR : qr)
                 : [savedQR, ...currentQrs];
-            if(!qrId){
+            if (!qrId) {
                 set({
                     totalQr: get().totalQr + 1
                 });
@@ -53,7 +53,7 @@ const useQrStore = create((set, get) => ({
             });
             throw new Error(error.response?.data?.message || error.message);
         }
-    },deleteQRS: async (qrsToDelete) => {
+    }, deleteQRS: async (qrsToDelete) => {
         set({ isLoadingButton: true, error: null });
         try {
             await axios.delete(`${VITE_API_USER_URL}/delete?qrIds=${qrsToDelete.join(",")}`);
@@ -62,7 +62,7 @@ const useQrStore = create((set, get) => ({
         } catch (error) {
             set({ error: error.message, isLoadingButton: false });
         }
-    },getQRS: async (userId) => {
+    }, getQRS: async (userId) => {
         set({ error: null });
         try {
             const response = await axios.get(`${VITE_API_USER_URL}/user/${userId}`);
@@ -78,7 +78,7 @@ const useQrStore = create((set, get) => ({
                 set({ error: error.response?.data?.message || error.message });
             }
         }
-    },getTop10UserQrs: async(userId) => {
+    }, getTop10UserQrs: async (userId) => {
         set({ error: null });
         try {
             const response = await axios.get(`${VITE_API_USER_URL}/TopScans/${userId}`);
@@ -87,25 +87,25 @@ const useQrStore = create((set, get) => ({
             set({ error: error.response?.data?.message || error.message });
             throw new Error(error.response?.data?.message || error.message);
         }
-    },getLastWeekQrStats: async(userId) => {
+    }, getLastWeekQrStats: async (userId) => {
         set({ error: null });
         try {
             const response = await axios.get(`${VITE_API_USER_URL}/last-week-stats/${userId}`);
             set({ lastWeekQrStats: response?.data });
         } catch (error) {
-        console.log(error.message);
+            console.log(error.message);
             set({ error: error.response?.data?.message || error.message });
             throw new Error(error.response?.data?.message || error.message);
         }
-    },getQrById: async (qrId) => {
-        set({ error: null,loading:true });
+    }, getQrById: async (qrId) => {
+        set({ error: null, loading: true });
         try {
             const response = await axios.get(`${VITE_API_USER_URL}/getQr/${qrId}`);
-            set({ qrData: response?.data,loading:false });
+            set({ qrData: response?.data, loading: false });
         } catch (error) {
-            set({ error: error.response?.data?.message || error.message,loading:false });
+            set({ error: error.response?.data?.message || error.message, loading: false });
             throw new Error(error.response?.data?.message || error.message);
         }
-    }, 
+    },
 }));
 export default useQrStore;
