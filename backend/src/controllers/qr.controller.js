@@ -17,7 +17,7 @@ export const saveQr = async (req, res) => {
       return res.status(400).json({ message: 'Name, Config and userId are required!!' });
     }
     dotenv.config({ quiet: true });
-    const BASE_URL = process.env.MODE === "development" ? "http://localhost:8080" : "";
+    const BASE_URL = process.env.MODE === "development" ? "http://localhost:8080" : "https://qrgenerator-ctx0.onrender.com";
     let config = typeof configBody === 'string' ? JSON.parse(configBody) : configBody;
     const tokenURL = crypto.randomBytes(8).toString('hex');
     const unrealDestination = `${BASE_URL}/api/qr/scan/${tokenURL}`;
@@ -144,9 +144,9 @@ export const scanQr = async (req, res) => {
     if (!qr) return res.status(404).json({ message: "QR not found" });
     await Scanner.findOneAndUpdate(
       { qrId: qr._id },
-      { 
-        $inc: { scanCount: 1 }, 
-        $set: { userAgent: req.headers["user-agent"], ipAddress: req.ip } 
+      {
+        $inc: { scanCount: 1 },
+        $set: { userAgent: req.headers["user-agent"], ipAddress: req.ip }
       },
       { new: true, upsert: true }
     );
@@ -186,7 +186,7 @@ export const deleteQrs = async (req, res) => {
         }
       }
       await QRCodeModel.findByIdAndDelete(qrId);
-      await Scanner.deleteMany({qrId});
+      await Scanner.deleteMany({ qrId });
       deletedQrs.push(qrId);
     }
     res.status(200).json({
@@ -205,7 +205,7 @@ export const getUserQrs = async (req, res) => {
       return res.status(400).json({ message: "userId is required" });
     }
     const qrs = await QRCodeModel.find({ userId })
-      .populate("imageId", "image logoUrl createdAt") 
+      .populate("imageId", "image logoUrl createdAt")
       .sort({ createdAt: -1 });
 
     if (!qrs || qrs.length === 0) {
@@ -280,7 +280,7 @@ export const getLastWeekQrStats = async (req, res) => {
     }
     const today = new Date();
     const lastWeek = new Date();
-    lastWeek.setDate(today.getDate() - 6); 
+    lastWeek.setDate(today.getDate() - 6);
     const stats = await QRCodeModel.aggregate([
       {
         $match: {
